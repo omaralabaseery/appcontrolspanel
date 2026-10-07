@@ -111,3 +111,18 @@ APIs الإعداد:
 - https://firebase.google.com/docs/firestore/data-model
 - https://firebase.google.com/docs/projects/api-keys
 - https://firebase.google.com/docs/admin/setup
+
+## حل خطأ Could not resolve placeholder 'panel.firebase.project-id'
+
+الخطأ يعني أن خاصية المشروع لم تُحمّل في بيئة التشغيل. ملفها الأساسي هو `src/main/resources/application.yml`، ويجب أن ينسخه Maven إلى `target/classes/application.yml`.
+
+تم إضافة fallback في حقن الإعدادات: خاصية Spring أولًا، ثم `FIREBASE_PROJECT_ID`، ثم مشروع `insta-11358` الافتراضي. هذا لا يفعّل Firebase ولا يتجاوز الحاجة إلى صلاحيات السيرفر.
+
+من مجلد المشروع بعد سحب التحديثات:
+
+```powershell
+git pull --ff-only
+mvn clean spring-boot:run
+```
+
+إذا كنت تستخدم IDE، أعد تحميل مشروع Maven وتأكد أن `src/main/resources` محدد كمجلد Resources، وراجع إعدادات `spring.config.location` و`spring.config.name` إذا كنت قد خصصتها. لا تحذف ملفات إعداداتك المحلية أو بيانات الدخول لحل هذا الخطأ.

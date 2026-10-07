@@ -12,7 +12,7 @@ import org.springframework.context.annotation.*;
 @Configuration
 @ConditionalOnProperty(name="panel.firebase.enabled", havingValue="true")
 class FirebaseConfig {
-    @Bean FirebaseApp firebaseApp(@Value("${panel.firebase.project-id}") String projectId) throws Exception {
+    @Bean FirebaseApp firebaseApp(@Value("${panel.firebase.project-id:${FIREBASE_PROJECT_ID:insta-11358}}") String projectId) throws Exception {
         if (projectId.isBlank()) throw new IllegalStateException("FIREBASE_PROJECT_ID is required");
         return FirebaseApp.initializeApp(FirebaseOptions.builder().setProjectId(projectId)
             .setCredentials(GoogleCredentials.getApplicationDefault()).build());

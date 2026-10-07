@@ -1,0 +1,40 @@
+/* Palette inspired by kotc.com.kw. Load after the base and component styles. */
+:root {
+  --brand-primary: #cd0b0c;
+  --brand-hover: #bf181f;
+  --brand-soft: #fff1f1;
+  --brand-border: #efc6c6;
+  --blue: var(--brand-primary);
+  --navy: #0c2e8a;
+  --bg: #f2f5f8;
+  --text: #444;
+  --muted: #68717b;
+  --border: #dfe3e7;
+}
+body { accent-color: var(--brand-primary); }
+a:hover { color: var(--brand-hover); }
+.brand:hover { color: var(--navy); }
+.topbar { border-top: 3px solid var(--brand-primary); }
+.app-icon, nav a.active, .badge.blue, .step-number,
+.user-cell .avatar, .pill-group button.selected {
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+}
+nav a.active { box-shadow: inset 3px 0 var(--brand-primary); }
+.pill-group button.selected { border-color: var(--brand-border); }
+.button.primary:hover { background: var(--brand-hover); border-color: var(--brand-hover); }
+.button:hover { background: #f2f5f8; }
+.notice { background: #f2f5f8; border-color: var(--border); color: #555; }
+.stat-icon { background: var(--brand-soft); color: var(--brand-primary); }
+.legend-dot { background: var(--brand-primary); }
+.legend-dot.pale { background: #929aa4; }
+.chart-line { stroke: var(--brand-primary); }
+.chart-secondary { stroke: #929aa4; }
+.chart stop { stop-color: var(--brand-primary); }
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--brand-border);
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 .2rem rgb(205 11 12 / 12%);
+}
+:focus-visible { outline-color: var(--brand-primary); }
+footer { background: #f2f5f8; color: var(--muted); }

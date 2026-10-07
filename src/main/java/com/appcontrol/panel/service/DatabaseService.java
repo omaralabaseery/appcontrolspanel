@@ -20,9 +20,11 @@ public class DatabaseService {
     private final Map<String,Object> schema;
 
     DatabaseService(ObjectProvider<Firestore> provider, ObjectMapper mapper,
-                    @Value("${panel.firebase.project-id}") String projectId) throws IOException {
+                    @Value("${panel.firebase.project-id:${FIREBASE_PROJECT_ID:insta-11358}}") String projectId) throws IOException {
         this.provider=provider; this.mapper=mapper; this.projectId=projectId;
-        try(var in=new ClassPathResource("database/schema.json").getInputStream()) {
+        var resource = new ClassPathResource("database/schema.json");
+        if (!resource.exists()) throw new IllegalStateException("Missing database/schema.json on the classpath. Run mvn clean spring-boot:run from the project folder and mark src/main/resources as Resources Root in your IDE.");
+        try(var in=resource.getInputStream()) {
             schema=mapper.readValue(in,new TypeReference<Map<String,Object>>(){});
         }
         if(((Number)schema.get("schemaVersion")).intValue()!=SCHEMA_VERSION)

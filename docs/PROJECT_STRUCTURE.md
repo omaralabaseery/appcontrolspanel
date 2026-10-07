@@ -44,3 +44,7 @@ The supplied file does not specify a new sidebar layout, graphics or dashboard H
 Edit public browser project settings only in `assets/js/config/firebase-config.js`. Put private service-account credentials outside the repository and reference them through `GOOGLE_APPLICATION_CREDENTIALS`. Initialization instructions: [DATABASE_SETUP_AR.md](DATABASE_SETUP_AR.md).
 
 Moving Java packages and browser assets does not change REST endpoint paths or Firestore collection names.
+
+### Company color theme
+
+`src/main/resources/static/assets/css/theme-kotc.css` is loaded last and contains the palette inspired by https://www.kotc.com.kw/Pages/Default.aspx: red `#cd0b0c`, dark red `#bf181f`, white, gray `#f2f5f8`, and navy `#0c2e8a`. Edit this file to change company colors. The supplied Bootstrap CSS is preserved.
