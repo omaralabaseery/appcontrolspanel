@@ -1,0 +1,18 @@
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: never
+spring:
+  application:
+    name: appcontrol-panel
+  servlet:
+    multipart:
+      enabled: false
+panel:
+  firebase:
+    enabled: ${FIREBASE_ENABLED:false}
+    project-id: ${FIREBASE_PROJECT_ID:}
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    persist-authorization: false

@@ -67,3 +67,17 @@ docs/                              Setup, API and data model
 The live backend is implemented, but a Firebase project, credentials, admin account and mobile integration are required for real data and real pushes. No Firebase project is provisioned automatically. “Online” means a heartbeat within five minutes. “Installations” means registered installation IDs, not App Store/Google Play download statistics. Telemetry is explicitly sent by the app, not intercepted automatically. The illustrative activity chart is shown only in demo mode; live mode shows actual recorded totals.
 
 Before production, add infrastructure rate limiting/App Check, monitoring, retention policy and your domain/TLS configuration. The panel is a single Firebase project workspace, not a multi-tenant SaaS. See the operational notes for paging, notification retries and scale limits.
+
+## Verification
+
+`mvn clean verify` runs 10 tests covering update boundaries, separate platforms, Arabic locale selection, maintenance precedence, store URL validation, admin access control, input validation and fail-closed behavior without Firebase.
+
+Optional browser smoke test (with the server running and Node.js installed):
+
+```sh
+npm install --no-save playwright
+npx playwright install chromium
+node tests/ui-smoke.cjs
+```
+
+`PANEL_TEST_URL` overrides `http://localhost:8080`. The test uses an isolated browser context and demo data; it checks user details/log filtering, notification simulation, Arabic policy preview, invalid build validation, persisted maintenance settings and mobile navigation. Screenshots go to the operating system's temporary directory. Live Firebase/FCM requires the device verification steps in the setup guide.

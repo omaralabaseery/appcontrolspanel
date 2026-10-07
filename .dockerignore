@@ -1,0 +1,7 @@
+.git
+.env*
+target
+credentials
+node_modules
+**/*service-account*.json
+**/*firebase-adminsdk*.json

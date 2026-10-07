@@ -1,0 +1,18 @@
+const {chromium}=require('playwright');
+const base=process.env.PANEL_TEST_URL||'http://localhost:8080';
+(async()=>{
+ const browser=await chromium.launch({headless:true}); const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(base);await page.getByRole('heading',{name:'Recent application requests'}).waitFor();
+ await page.screenshot({path:require('os').tmpdir()+'/appcontrol-desktop.png',fullPage:true,animations:"disabled"});
+ await page.locator('a[data-page=users]').click();await page.locator('#user-search').fill('Sarah');await page.getByRole('button',{name:'View profile'}).click();await page.getByRole('heading',{name:'Sarah Ahmed',exact:true}).waitFor();await page.getByRole('button',{name:'View requests & feature activity'}).click();await page.waitForTimeout(150);if(!await page.locator('#log-uid').inputValue())throw Error('User filter not applied');
+ await page.locator('a[data-page=notifications]').click();await page.locator('#single-user').selectOption('usr_1001');await page.locator('#push-title').fill('Test notification');await page.locator('#push-body').fill('A test message');await page.getByRole('button',{name:'Review notification'}).click();await page.getByRole('button',{name:'Simulate notification'}).click();await page.locator('#notice-table').getByText('Test notification',{exact:true}).waitFor();
+ await page.locator('a[data-page=versions]').click();await page.getByRole('button',{name:'Preview update behavior'}).click();await page.locator('#test-language').selectOption('ar');await page.getByText('force_update',{exact:true}).waitFor();await page.locator('#test-build').fill('241');await page.getByText('allow',{exact:true}).waitFor();await page.getByRole('button',{name:'Close dialog'}).click();
+ await page.locator('#android-minimum').fill('300');await page.getByRole('button',{name:'Save version policy'}).click();await page.getByRole('status').filter({hasText:'minimum build cannot exceed'}).waitFor();
+ await page.locator('a[data-page=maintenance]').click();await page.locator('#maintenance-enabled').check();await page.locator('#maintenance-preview-language').selectOption('ar');await page.getByText('صيانة التطبيق',{exact:true}).waitFor();await page.getByRole('button',{name:'Save maintenance settings'}).click();await page.getByRole('button',{name:'Save settings',exact:true}).click();await page.waitForTimeout(100);await page.reload();await page.locator('#maintenance-enabled:checked').waitFor();
+ await page.locator('a[data-page=integration]').click();await page.getByRole('heading',{name:'REST API reference'}).waitFor();
+ await page.setViewportSize({width:390,height:844});await page.goto(base+'/#overview');await page.getByRole('heading',{name:'Overview',exact:true}).waitFor();await page.screenshot({path:require('os').tmpdir()+'/appcontrol-mobile.png',fullPage:true,animations:"disabled"});
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);if(overflow)throw Error('Mobile horizontal overflow');
+ await page.locator('#menu-toggle').click();await page.locator('a[data-page=users]').click();await page.locator('#user-search').waitFor();
+ if(errors.length)throw Error(errors.join('\n'));
+ console.log('PASS: overview, user details, user log filtering, notification simulation, policy/Arabic preview, validation, persistence, integration, mobile navigation, no page errors');await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});
