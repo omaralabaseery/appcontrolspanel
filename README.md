@@ -2,6 +2,10 @@
 
 A formal, responsive administration panel built with **HTML, CSS and vanilla JavaScript**, served by **Java 17 / Spring Boot 3.5**. Firebase Authentication protects the APIs, Firestore stores operational data, and Firebase Cloud Messaging sends push notifications.
 
+## Database setup — insta-11358
+
+The provided Firebase web configuration is installed. See [تجهيز قاعدة البيانات خطوة بخطوة](docs/DATABASE_SETUP_AR.md) and the [collection/field manifest](src/main/resources/database/schema.json). After configuring server credentials and signing in as an admin, use **Integration → Initialize database**. Initialization preserves existing settings, creates missing configuration and records an audit event. Data collections appear on the first real API write; no dummy records are inserted. No live database writes have been performed with the web configuration alone.
+
 ## التشغيل السريع
 
 المشروع يحتوي على الواجهة والباك إند Java Spring Boot. وضع المعاينة يعمل بدون حساب Firebase ويستخدم بيانات تجريبية واضحة؛ لا يرسل إشعارات حقيقية. لتفعيل البيانات الحقيقية، اتبع ملف [إعداد Firebase](docs/FIREBASE_SETUP.md).
@@ -49,6 +53,7 @@ flowchart TD
 
 ## Documentation
 
+- [File structure and CSS customization](docs/PROJECT_STRUCTURE.md)
 - [Firebase setup and deployment](docs/FIREBASE_SETUP.md)
 - [API contract and mobile integration](docs/API.md)
 - [Data model, semantics and operational considerations](docs/DATA_MODEL.md)
@@ -56,8 +61,8 @@ flowchart TD
 ## Project layout
 
 ```text
-src/main/java/com/appcontrol/panel/  Spring Boot API, security and Firebase services
-src/main/resources/static/          HTML, CSS, JavaScript and public web config
+src/main/java/com/appcontrol/panel/  Application + config/controller/service/dto/exception
+src/main/resources/static/          index.html + assets/css and assets/js modules
 src/test/java/com/appcontrol/panel/  Policy and security tests
 docs/                              Setup, API and data model
 ```
@@ -70,7 +75,7 @@ Before production, add infrastructure rate limiting/App Check, monitoring, reten
 
 ## Verification
 
-`mvn clean verify` runs 10 tests covering update boundaries, separate platforms, Arabic locale selection, maintenance precedence, store URL validation, admin access control, input validation and fail-closed behavior without Firebase.
+`mvn clean verify` runs policy, security and database initialization tests covering update boundaries, separate platforms, Arabic locale selection, maintenance precedence, store URL validation, admin access control, input validation and fail-closed behavior without Firebase.
 
 Optional browser smoke test (with the server running and Node.js installed):
 
@@ -78,6 +83,7 @@ Optional browser smoke test (with the server running and Node.js installed):
 npm install --no-save playwright
 npx playwright install chromium
 node tests/ui-smoke.cjs
+node tests/database-ui.cjs
 ```
 
 `PANEL_TEST_URL` overrides `http://localhost:8080`. The test uses an isolated browser context and demo data; it checks user details/log filtering, notification simulation, Arabic policy preview, invalid build validation, persisted maintenance settings and mobile navigation. Screenshots go to the operating system's temporary directory. Live Firebase/FCM requires the device verification steps in the setup guide.

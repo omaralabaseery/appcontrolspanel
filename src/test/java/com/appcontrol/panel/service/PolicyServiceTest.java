@@ -1,7 +1,7 @@
-package com.appcontrol.panel;
+package com.appcontrol.panel.service;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.appcontrol.panel.Models.*;
+import static com.appcontrol.panel.dto.Models.*;
 class PolicyServiceTest {
     Policy policy(boolean maintenance) {
         return new Policy(maintenance,"Maintenance","صيانة","Update","تحديث",

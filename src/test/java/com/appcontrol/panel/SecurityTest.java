@@ -33,4 +33,11 @@ class SecurityTest {
         mvc.perform(get("/index.html")).andExpect(status().isOk());
         mvc.perform(get("/v3/api-docs")).andExpect(status().isOk());
     }
+    @Test void databaseInitializationRequiresAdminAndConfiguredServer() throws Exception {
+        mvc.perform(post("/api/admin/database/initialize")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/admin/database/initialize").with(user("mobile").roles("USER"))).andExpect(status().isForbidden());
+        mvc.perform(post("/api/admin/database/initialize").with(user("admin").roles("ADMIN"))).andExpect(status().isServiceUnavailable());
+        mvc.perform(get("/api/admin/database/schema").with(user("admin").roles("ADMIN")))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.schemaVersion").value(1));
+    }
 }

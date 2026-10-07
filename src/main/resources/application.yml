@@ -11,7 +11,7 @@ spring:
 panel:
   firebase:
     enabled: ${FIREBASE_ENABLED:false}
-    project-id: ${FIREBASE_PROJECT_ID:}
+    project-id: ${FIREBASE_PROJECT_ID:insta-11358}
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

@@ -8,6 +8,9 @@ All routes except `GET /mobile/config` require `Authorization: Bearer <Firebase 
 
 | Method | Path | Purpose |
 |---|---|---|
+| GET | `/admin/database/schema` | Collection definitions and field types |
+| GET | `/admin/database` | Bootstrap status and populated collections |
+| POST | `/admin/database/initialize` | Create missing settings/metadata and audit; preserve existing data |
 | GET | `/admin/stats` | `users`, `online`, `installations`, `multiDevice`, `requests`, `errors`, `updatedAt` |
 | GET | `/admin/users?cursor=` | Users, 50 per page |
 | GET | `/admin/users/{uid}` | User and linked devices; no FCM tokens returned |

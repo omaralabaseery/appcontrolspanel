@@ -1,4 +1,4 @@
-package com.appcontrol.panel;
+package com.appcontrol.panel.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.firestore.*;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
-import static com.appcontrol.panel.Models.*;
+import static com.appcontrol.panel.dto.Models.*;
 @Service
 public class PanelService {
     private final ObjectProvider<Firestore> dbProvider;
@@ -70,7 +70,7 @@ public class PanelService {
         db.runTransaction(t -> {
             var old=t.get(installation).get(); var user=t.get(u).get();
             String previous=old.exists()?old.getString("uid"):null;
-            DocumentReference previousRef=previous!=null&&!previous.equals(uid)?db.collection("users").document(previous):null;
+            DocumentReference previousRef=previous!=null&&!previous.isBlank()&&!previous.equals(uid)?db.collection("users").document(previous):null;
             DocumentSnapshot previousUser=previousRef!=null?t.get(previousRef).get():null;
             long devices=user.exists()&&user.getLong("deviceCount")!=null?user.getLong("deviceCount"):0;
             boolean newOwner=!uid.equals(previous);

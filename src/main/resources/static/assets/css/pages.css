@@ -1,0 +1,306 @@
+/* AppControl pages styles — overrides layered after the supplied Bootstrap CSS. */
+.phone {
+  max-width: 265px;
+  border: 6px solid #293748;
+  border-radius: 32px;
+  margin: 8px auto 22px;
+  background: #f3f5f9;
+  min-height: 410px;
+  padding: 15px;
+}
+.phone-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 0 3px;
+}
+.phone-notch {
+  height: 17px;
+  width: 70px;
+  background: #293748;
+  border-radius: 0 0 12px 12px;
+  margin: -15px auto 18px;
+}
+.phone-date {
+  text-align: center;
+  font-size: 11px;
+  color: #617085;
+  margin-top: 35px;
+}
+.phone-time {
+  text-align: center;
+  font-size: 44px;
+  font-weight: 300;
+  color: #3c4d64;
+  line-height: 1.2;
+  margin: 8px 0 25px;
+}
+.push-card {
+  background: #ffffffdd;
+  border: 1px solid white;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+.push-card .row {
+  font-size: 8px;
+  color: #8b95a3;
+  margin-bottom: 6px;
+  gap: 5px;
+}
+.push-card strong {
+  display: block;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+.phone-modal {
+  background: white;
+  padding: 22px 16px;
+  margin-top: 50px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.phone-modal h3 {
+  margin-top: 12px;
+  font-size: 15px;
+}
+.phone-modal p {
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.phone-modal .button {
+  width: 100%;
+}
+.muted {
+  color: var(--muted);
+}
+.center {
+  text-align: center;
+}
+.empty {
+  padding: 45px 20px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 12px;
+}
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 22px;
+}
+.switch-row p {
+  font-size: 11px;
+  color: var(--muted);
+}
+.switch {
+  appearance: none;
+  width: 38px;
+  height: 22px;
+  background: #cdd5df;
+  border: 0;
+  border-radius: 15px;
+  padding: 3px;
+  cursor: pointer;
+  position: relative;
+}
+.switch:before {
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.switch:checked {
+  background: var(--blue);
+}
+.switch:checked:before {
+  transform: translateX(16px);
+}
+.endpoint {
+  font:
+    11px/1.8 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  padding: 12px;
+  background: #f6f8fb;
+  border-radius: 5px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.endpoint b {
+  color: var(--blue);
+}
+.integration-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+.endpoint-row {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+}
+.endpoint-row code {
+  font-size: 11px;
+}
+.endpoint-row p {
+  margin-top: 6px;
+  color: var(--muted);
+}
+.step {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.step-number {
+  background: #edf2ff;
+  color: var(--blue);
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  font-size: 11px;
+}
+.step p {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.step strong {
+  font-size: 12px;
+  font-weight: 550;
+}
+footer {
+  font-size: 10px;
+  color: #9aa4b3;
+  padding: 17px 36px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+}
+dialog {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 20px 80px #142e5030;
+  padding: 0;
+  width: min(720px, calc(100% - 30px));
+  max-height: 90vh;
+  color: var(--text);
+}
+dialog::backdrop {
+  background: #14243b66;
+  backdrop-filter: blur(3px);
+}
+.dialog-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dialog-body {
+  padding: 24px;
+}
+.dialog-body p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+#toast {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translate(-50%, 20px);
+  background: #213651;
+  color: white;
+  padding: 12px 22px;
+  z-index: 100;
+  border-radius: 7px;
+  box-shadow: 0 5px 25px #142e5030;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.2s;
+  max-width: 90vw;
+}
+#toast.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.error-box {
+  border: 1px solid #efc9cc;
+  background: #fff5f5;
+  color: #a34650;
+  padding: 14px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 12px;
+}
+.detail-stat {
+  background: #f7f9fc;
+  padding: 14px;
+  border-radius: 6px;
+}
+.detail-stat small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+}
+.detail-stat strong {
+  font-size: 17px;
+}
+.checklist {
+  max-height: 160px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 8px;
+}
+.checklist label {
+  display: flex;
+  gap: 9px;
+  padding: 5px;
+  margin: 0;
+  font-weight: 400;
+}
+.checklist input {
+  width: 15px;
+}
+.divider {
+  margin: 24px 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+.user-detail-events {
+  margin-top: 20px;
+}
+.pill-group {
+  display: flex;
+  gap: 8px;
+}
+.pill-group button {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 6px 12px;
+  background: white;
+  font-size: 11px;
+}
+.pill-group button.selected {
+  background: #edf2ff;
+  color: var(--blue);
+  border-color: #cedbfc;
+}

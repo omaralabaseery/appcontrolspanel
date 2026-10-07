@@ -1,10 +1,12 @@
-package com.appcontrol.panel;
+package com.appcontrol.panel.controller;
 import jakarta.validation.Valid;
+import com.appcontrol.panel.service.PanelService;
+import com.appcontrol.panel.service.PolicyService;
 import java.security.Principal;
 import java.util.Map;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import static com.appcontrol.panel.Models.*;
+import static com.appcontrol.panel.dto.Models.*;
 @RestController
 @RequestMapping("/api")
 @SecurityRequirement(name="firebaseBearer")

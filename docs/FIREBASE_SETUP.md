@@ -1,11 +1,13 @@
 # Firebase setup
 
+Web configuration for `insta-11358` is already present. The server defaults to the same project ID; server credentials are still required. After admin sign-in, follow [Database initialization](DATABASE_SETUP_AR.md) to create missing configuration.
+
 ## 1. Create or select your project
 
 1. Enable Firebase Authentication → Email/Password.
 2. Create a Cloud Firestore database in Native mode and select its permanent region deliberately.
 3. Enable Cloud Messaging and configure the Android app / Apple APNs credentials in Firebase.
-4. Register a Firebase web app for the panel. Copy its **public** web configuration into `src/main/resources/static/config.js` (apiKey, authDomain, projectId, appId). This is not a service-account key.
+4. Register a Firebase web app for the panel. Copy its **public** web configuration into `src/main/resources/static/assets/js/config/firebase-config.js` (apiKey, authDomain, projectId, appId). This is not a service-account key.
 5. Add the panel's domain to Authentication's authorized domains.
 6. Apply `firestore.rules` using your Firebase console or CLI. These rules deny direct client access; mobile and panel clients use Spring Boot. **If reusing an existing database, review and merge rules first: replacing existing rules could break other apps.** The Admin SDK is authorized by server IAM, not these rules.
 
@@ -29,7 +31,7 @@ $env:GOOGLE_APPLICATION_CREDENTIALS = 'C:\secure\service-account.json'
 mvn spring-boot:run
 ```
 
-Do not put private keys in config.js, GitHub, localStorage, or browser requests. `.env.example` documents variables; Spring does not automatically read a `.env` file. Grant the runtime service account only the Firestore, Firebase Auth and FCM permissions it needs. Auth token verification checks revocation; the service account also needs access to retrieve Firebase Auth users.
+Do not put private keys in assets/js/config/firebase-config.js, GitHub, localStorage, or browser requests. `.env.example` documents variables; Spring does not automatically read a `.env` file. Grant the runtime service account only the Firestore, Firebase Auth and FCM permissions it needs. Auth token verification checks revocation; the service account also needs access to retrieve Firebase Auth users.
 
 ## 3. Grant administrator access
 

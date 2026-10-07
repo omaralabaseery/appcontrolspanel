@@ -1,4 +1,4 @@
-package com.appcontrol.panel;
+package com.appcontrol.panel.exception;
 import java.util.Map;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;

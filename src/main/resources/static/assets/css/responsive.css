@@ -1,0 +1,182 @@
+/* AppControl responsive styles — overrides layered after the supplied Bootstrap CSS. */
+@media (min-width: 1600px) {
+  main {
+    padding-top: 40px;
+  }
+  .stat {
+    padding: 25px;
+  }
+  .chart {
+    height: 220px;
+  }
+}
+@media (max-width: 1150px) {
+  .sidebar {
+    width: 220px;
+  }
+  .shell {
+    margin-left: 220px;
+  }
+  main {
+    padding: 26px 24px;
+  }
+  .topbar {
+    padding: 0 24px;
+  }
+  .stats-grid {
+    gap: 12px;
+  }
+  .stat {
+    padding: 16px;
+  }
+  .grid-two {
+    grid-template-columns: 1.3fr 1fr;
+    gap: 16px;
+  }
+  td,
+  th {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .top-actions {
+    gap: 9px;
+  }
+}
+@media (max-width: 900px) {
+  .sidebar {
+    width: 200px;
+    padding: 23px 12px;
+  }
+  .shell {
+    margin-left: 200px;
+  }
+  .brand {
+    padding-left: 6px;
+    font-size: 20px;
+  }
+  .workspace {
+    padding: 10px 7px;
+  }
+  .workspace-dot {
+    display: none;
+  }
+  nav a {
+    font-size: 11px;
+    gap: 8px;
+    padding: 10px;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-two,
+  .integration-grid {
+    grid-template-columns: 1fr;
+  }
+  .topbar {
+    padding: 0 20px;
+  }
+  .top-actions .avatar {
+    display: none;
+  }
+  .chart {
+    height: 190px;
+  }
+}
+@media (max-width: 640px) {
+  .sidebar {
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition: transform 0.2s;
+    width: 235px;
+    box-shadow: 15px 0 30px #142e5010;
+  }
+  .sidebar.open {
+    visibility: visible;
+    transform: translateX(0);
+  }
+  .shell {
+    margin-left: 0;
+  }
+  .menu-toggle {
+    display: block;
+  }
+  .topbar {
+    height: 66px;
+    padding: 0 14px;
+  }
+  .breadcrumb {
+    gap: 8px;
+  }
+  .breadcrumb > span:first-of-type,
+  .slash {
+    display: none;
+  }
+  .top-actions {
+    gap: 8px;
+  }
+  .top-actions .button {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+  main {
+    padding: 24px 16px;
+  }
+  .page-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: 23px;
+  }
+  .stats-grid {
+    gap: 10px;
+  }
+  .stat {
+    padding: 14px;
+  }
+  .stat-number {
+    font-size: 26px;
+  }
+  .stat-top {
+    font-size: 10px;
+  }
+  .stat-icon {
+    width: 28px;
+    height: 28px;
+  }
+  .stat-foot {
+    font-size: 9px;
+  }
+  .fields {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .panel-head,
+  .panel-body {
+    padding: 16px;
+  }
+  .chart-legend {
+    gap: 6px;
+    font-size: 9px;
+  }
+  footer {
+    padding: 16px;
+    display: block;
+  }
+  footer > span {
+    display: block;
+  }
+  .notice {
+    font-size: 11px;
+  }
+  .dialog-body {
+    padding: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

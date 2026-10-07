@@ -9,7 +9,8 @@ All server timestamps are epoch milliseconds. Firebase stores a single applicati
 | events | SHA-256(uid:eventId) | uid, eventId, feature, method, path, status, durationMs, message, createdAt |
 | notifications | SHA-256(actor:idempotencyKey) | actor, userIds, title, body, fingerprint, status, accepted, failed, createdAt |
 | settings | application | maintenance, localized messages, Android/iOS policy |
-| audit | auto ID | actor, action, createdAt, policy snapshot |
+| audit | auto ID | actor, action, createdAt, policy snapshot or createdDocuments |
+| _meta | schema | schemaVersion, collectionNames, createdAt, createdBy |
 
 ## Metric definitions
 
@@ -33,3 +34,7 @@ Device registration/ownership transfer/count changes run in Firestore transactio
 - API DTO validation limits strings and sanitized path characters. Free-form diagnostic messages must be scrubbed in the mobile app. The panel escapes rendered dynamic content.
 - The server has no demo bypass. Browser sample mode is separate, labelled and cannot send to Firebase.
 - The frontend's Firebase SDK is pinned and loaded only when signing in; the demo has no third-party runtime dependency.
+
+## Database initialization
+
+See [DATABASE_SETUP_AR.md](DATABASE_SETUP_AR.md). The canonical field manifest is `src/main/resources/database/schema.json`. The admin initializer creates only missing settings/metadata, plus an audit record when a change occurs. It never creates fake users, installations, events or notifications. Repeated initialization is a no-op and preserves existing policy.

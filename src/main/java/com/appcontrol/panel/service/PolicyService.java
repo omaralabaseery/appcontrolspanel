@@ -1,7 +1,7 @@
-package com.appcontrol.panel;
+package com.appcontrol.panel.service;
 import java.net.URI;
 import java.util.Map;
-import static com.appcontrol.panel.Models.*;
+import static com.appcontrol.panel.dto.Models.*;
 public final class PolicyService {
     private PolicyService() {}
     public static Policy defaults() {

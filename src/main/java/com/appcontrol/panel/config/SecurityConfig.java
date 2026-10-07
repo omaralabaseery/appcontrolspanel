@@ -1,4 +1,4 @@
-package com.appcontrol.panel;
+package com.appcontrol.panel.config;
 import com.google.firebase.auth.FirebaseAuth;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
