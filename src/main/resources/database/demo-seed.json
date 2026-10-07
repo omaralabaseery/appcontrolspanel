@@ -1,0 +1,667 @@
+[
+  {
+    "path": "users/seed_v1_usr_1001",
+    "data": {
+      "name": "[TEST] Sarah Ahmed",
+      "email": "sarah.ahmed@example.com",
+      "language": "ar",
+      "lastSeen": -45000,
+      "deviceCount": 2,
+      "createdAt": -691200000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "users/seed_v1_usr_1002",
+    "data": {
+      "name": "[TEST] Omar Hassan",
+      "email": "omar.h@example.com",
+      "language": "ar",
+      "lastSeen": -7200000,
+      "deviceCount": 1,
+      "createdAt": -777600000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "users/seed_v1_usr_1003",
+    "data": {
+      "name": "[TEST] James Wilson",
+      "email": "james.w@example.com",
+      "language": "en",
+      "lastSeen": -10800000,
+      "deviceCount": 3,
+      "createdAt": -864000000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "users/seed_v1_usr_1004",
+    "data": {
+      "name": "[TEST] Nour Ali",
+      "email": "nour.ali@example.com",
+      "language": "ar",
+      "lastSeen": -45000,
+      "deviceCount": 1,
+      "createdAt": -950400000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "users/seed_v1_usr_1005",
+    "data": {
+      "name": "[TEST] Emily Chen",
+      "email": "emily.c@example.com",
+      "language": "en",
+      "lastSeen": -18000000,
+      "deviceCount": 2,
+      "createdAt": -1036800000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "users/seed_v1_usr_1006",
+    "data": {
+      "name": "[TEST] Ahmed Khaled",
+      "email": "ahmed.k@example.com",
+      "language": "ar",
+      "lastSeen": -21600000,
+      "deviceCount": 1,
+      "createdAt": -1123200000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "users/seed_v1_usr_1007",
+    "data": {
+      "name": "[TEST] Laila Mostafa",
+      "email": "laila.m@example.com",
+      "language": "ar",
+      "lastSeen": -45000,
+      "deviceCount": 1,
+      "createdAt": -1209600000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "users/seed_v1_usr_1008",
+    "data": {
+      "name": "[TEST] Daniel Smith",
+      "email": "daniel.s@example.com",
+      "language": "en",
+      "lastSeen": -28800000,
+      "deviceCount": 2,
+      "createdAt": -1296000000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_0_0",
+    "data": {
+      "uid": "seed_v1_usr_1001",
+      "model": "iPhone 15 Pro",
+      "platform": "ios",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -45000,
+      "createdAt": -691200000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_0_1",
+    "data": {
+      "uid": "seed_v1_usr_1001",
+      "model": "Samsung Galaxy S24",
+      "platform": "android",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -45000,
+      "createdAt": -691200000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_1_0",
+    "data": {
+      "uid": "seed_v1_usr_1002",
+      "model": "Samsung Galaxy S24",
+      "platform": "android",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -7200000,
+      "createdAt": -777600000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_2_0",
+    "data": {
+      "uid": "seed_v1_usr_1003",
+      "model": "iPhone 14",
+      "platform": "ios",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -10800000,
+      "createdAt": -864000000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_2_1",
+    "data": {
+      "uid": "seed_v1_usr_1003",
+      "model": "Samsung Galaxy S24",
+      "platform": "android",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -10800000,
+      "createdAt": -864000000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_2_2",
+    "data": {
+      "uid": "seed_v1_usr_1003",
+      "model": "iPhone 14",
+      "platform": "ios",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -10800000,
+      "createdAt": -864000000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_3_0",
+    "data": {
+      "uid": "seed_v1_usr_1004",
+      "model": "Google Pixel 8",
+      "platform": "android",
+      "version": "2.3.0",
+      "build": 230,
+      "lastSeen": -45000,
+      "createdAt": -950400000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_4_0",
+    "data": {
+      "uid": "seed_v1_usr_1005",
+      "model": "iPhone 15 Pro",
+      "platform": "ios",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -18000000,
+      "createdAt": -1036800000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_4_1",
+    "data": {
+      "uid": "seed_v1_usr_1005",
+      "model": "Samsung Galaxy S24",
+      "platform": "android",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -18000000,
+      "createdAt": -1036800000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_5_0",
+    "data": {
+      "uid": "seed_v1_usr_1006",
+      "model": "Samsung Galaxy S24",
+      "platform": "android",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -21600000,
+      "createdAt": -1123200000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_6_0",
+    "data": {
+      "uid": "seed_v1_usr_1007",
+      "model": "iPhone 14",
+      "platform": "ios",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -45000,
+      "createdAt": -1209600000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_7_0",
+    "data": {
+      "uid": "seed_v1_usr_1008",
+      "model": "Google Pixel 8",
+      "platform": "android",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -28800000,
+      "createdAt": -1296000000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "installations/seed_v1_device_7_1",
+    "data": {
+      "uid": "seed_v1_usr_1008",
+      "model": "Samsung Galaxy S24",
+      "platform": "android",
+      "version": "2.4.1",
+      "build": 241,
+      "lastSeen": -28800000,
+      "createdAt": -1296000000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1000",
+    "data": {
+      "uid": "seed_v1_usr_1001",
+      "feature": "Open home screen",
+      "method": "POST",
+      "path": "/mobile/screens/home",
+      "status": 200,
+      "durationMs": 120,
+      "message": "[TEST] Home screen opened successfully",
+      "createdAt": 0,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1001",
+    "data": {
+      "uid": "seed_v1_usr_1002",
+      "feature": "Browse products",
+      "method": "GET",
+      "path": "/products",
+      "status": 200,
+      "durationMs": 84,
+      "message": "Products loaded",
+      "createdAt": -420000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1002",
+    "data": {
+      "uid": "seed_v1_usr_1003",
+      "feature": "Checkout",
+      "method": "POST",
+      "path": "/orders",
+      "status": 500,
+      "durationMs": 2450,
+      "message": "Payment gateway timed out. Reference: PAY_TIMEOUT",
+      "createdAt": -840000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1003",
+    "data": {
+      "uid": "seed_v1_usr_1004",
+      "feature": "Order tracking",
+      "method": "GET",
+      "path": "/orders/{id}",
+      "status": 200,
+      "durationMs": 97,
+      "message": "Order status loaded",
+      "createdAt": -1260000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1004",
+    "data": {
+      "uid": "seed_v1_usr_1005",
+      "feature": "Profile",
+      "method": "PATCH",
+      "path": "/profile",
+      "status": 422,
+      "durationMs": 210,
+      "message": "Profile validation failed: missing display name",
+      "createdAt": -1680000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1005",
+    "data": {
+      "uid": "seed_v1_usr_1006",
+      "feature": "Search",
+      "method": "GET",
+      "path": "/search",
+      "status": 200,
+      "durationMs": 63,
+      "message": "Search completed",
+      "createdAt": -2100000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1006",
+    "data": {
+      "uid": "seed_v1_usr_1007",
+      "feature": "Notifications",
+      "method": "GET",
+      "path": "/notifications",
+      "status": 200,
+      "durationMs": 76,
+      "message": "Inbox loaded",
+      "createdAt": -2520000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1007",
+    "data": {
+      "uid": "seed_v1_usr_1008",
+      "feature": "Address book",
+      "method": "GET",
+      "path": "/addresses",
+      "status": 200,
+      "durationMs": 112,
+      "message": "Addresses loaded",
+      "createdAt": -2940000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1008",
+    "data": {
+      "uid": "seed_v1_usr_1001",
+      "feature": "Open order details screen",
+      "method": "POST",
+      "path": "/mobile/screens/order-details",
+      "status": 500,
+      "durationMs": 120,
+      "message": "[TEST] Screen failed to open: order details API timed out; retry button displayed",
+      "createdAt": -3360000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1009",
+    "data": {
+      "uid": "seed_v1_usr_1002",
+      "feature": "Browse products",
+      "method": "GET",
+      "path": "/products",
+      "status": 200,
+      "durationMs": 84,
+      "message": "Products loaded",
+      "createdAt": -3780000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1010",
+    "data": {
+      "uid": "seed_v1_usr_1003",
+      "feature": "Checkout",
+      "method": "POST",
+      "path": "/orders",
+      "status": 500,
+      "durationMs": 2450,
+      "message": "Payment gateway timed out. Reference: PAY_TIMEOUT",
+      "createdAt": -4200000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1011",
+    "data": {
+      "uid": "seed_v1_usr_1004",
+      "feature": "Order tracking",
+      "method": "GET",
+      "path": "/orders/{id}",
+      "status": 200,
+      "durationMs": 97,
+      "message": "Order status loaded",
+      "createdAt": -4620000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1012",
+    "data": {
+      "uid": "seed_v1_usr_1005",
+      "feature": "Profile",
+      "method": "PATCH",
+      "path": "/profile",
+      "status": 422,
+      "durationMs": 210,
+      "message": "Profile validation failed: missing display name",
+      "createdAt": -5040000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1013",
+    "data": {
+      "uid": "seed_v1_usr_1006",
+      "feature": "Search",
+      "method": "GET",
+      "path": "/search",
+      "status": 200,
+      "durationMs": 63,
+      "message": "Search completed",
+      "createdAt": -5460000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1014",
+    "data": {
+      "uid": "seed_v1_usr_1007",
+      "feature": "Notifications",
+      "method": "GET",
+      "path": "/notifications",
+      "status": 200,
+      "durationMs": 76,
+      "message": "Inbox loaded",
+      "createdAt": -5880000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1015",
+    "data": {
+      "uid": "seed_v1_usr_1008",
+      "feature": "Address book",
+      "method": "GET",
+      "path": "/addresses",
+      "status": 200,
+      "durationMs": 112,
+      "message": "Addresses loaded",
+      "createdAt": -6300000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1016",
+    "data": {
+      "uid": "seed_v1_usr_1001",
+      "feature": "Open profile screen",
+      "method": "POST",
+      "path": "/mobile/screens/profile",
+      "status": 500,
+      "durationMs": 120,
+      "message": "[TEST] Screen rendering failed: profile displayName was missing",
+      "createdAt": -6720000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1017",
+    "data": {
+      "uid": "seed_v1_usr_1002",
+      "feature": "Browse products",
+      "method": "GET",
+      "path": "/products",
+      "status": 200,
+      "durationMs": 84,
+      "message": "Products loaded",
+      "createdAt": -7140000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1018",
+    "data": {
+      "uid": "seed_v1_usr_1003",
+      "feature": "Checkout",
+      "method": "POST",
+      "path": "/orders",
+      "status": 500,
+      "durationMs": 2450,
+      "message": "Payment gateway timed out. Reference: PAY_TIMEOUT",
+      "createdAt": -7560000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1019",
+    "data": {
+      "uid": "seed_v1_usr_1004",
+      "feature": "Order tracking",
+      "method": "GET",
+      "path": "/orders/{id}",
+      "status": 200,
+      "durationMs": 97,
+      "message": "Order status loaded",
+      "createdAt": -7980000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1020",
+    "data": {
+      "uid": "seed_v1_usr_1005",
+      "feature": "Profile",
+      "method": "PATCH",
+      "path": "/profile",
+      "status": 422,
+      "durationMs": 210,
+      "message": "Profile validation failed: missing display name",
+      "createdAt": -8400000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1021",
+    "data": {
+      "uid": "seed_v1_usr_1006",
+      "feature": "Search",
+      "method": "GET",
+      "path": "/search",
+      "status": 200,
+      "durationMs": 63,
+      "message": "Search completed",
+      "createdAt": -8820000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1022",
+    "data": {
+      "uid": "seed_v1_usr_1007",
+      "feature": "Notifications",
+      "method": "GET",
+      "path": "/notifications",
+      "status": 200,
+      "durationMs": 76,
+      "message": "Inbox loaded",
+      "createdAt": -9240000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "events/seed_v1_evt_1023",
+    "data": {
+      "uid": "seed_v1_usr_1008",
+      "feature": "Address book",
+      "method": "GET",
+      "path": "/addresses",
+      "status": 200,
+      "durationMs": 112,
+      "message": "Addresses loaded",
+      "createdAt": -9660000,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  },
+  {
+    "path": "notifications/seed_v1_demo_notice_1",
+    "data": {
+      "title": "[TEST] Your next update is here",
+      "body": "Explore the latest improvements in our app.",
+      "userIds": [
+        "seed_v1_usr_1001",
+        "seed_v1_usr_1002",
+        "seed_v1_usr_1003",
+        "seed_v1_usr_1004"
+      ],
+      "createdAt": -3600000,
+      "status": "simulated",
+      "accepted": 0,
+      "failed": 0,
+      "testData": true,
+      "seedBatch": "panel-demo-v1"
+    }
+  }
+]
