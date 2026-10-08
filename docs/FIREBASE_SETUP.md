@@ -73,3 +73,9 @@ Or build `docker build -t appcontrol .` and run with the environment variables a
 - https://firebase.google.com/docs/auth/admin/custom-claims
 - https://firebase.google.com/docs/cloud-messaging/send/admin-sdk
 - https://docs.spring.io/spring-boot/3.5/system-requirements.html
+
+## Connection indicator
+
+The panel and sign-in dialog show the configured project, Firestore database, server connection result, admin session, and current data source. The server checks connectivity with a read of `_meta/schema` (a missing document still proves connectivity), caches the result for 30 seconds, and exposes only project ID, database name, status and check time at `GET /api/connection`. It does not return database records or credentials. Use Check connection to request the latest cached result; after configuration changes restart the backend.
+
+A connected server does not sign an administrator into the browser: Demo samples remain until admin sign-in succeeds. A browser/server project mismatch is displayed explicitly. This checks Firestore reads; it does not prove write permissions, Firebase Auth authorization, or push delivery.

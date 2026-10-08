@@ -40,4 +40,10 @@ class SecurityTest {
         mvc.perform(get("/api/admin/database/schema").with(user("admin").roles("ADMIN")))
             .andExpect(status().isOk()).andExpect(jsonPath("$.schemaVersion").value(1));
     }
+    @Test void connectionStatusIsPublicButDatabaseRecordsRemainProtected() throws Exception {
+        mvc.perform(get("/api/connection")).andExpect(status().isOk())
+            .andExpect(jsonPath("$.projectId").value("insta-11358"))
+            .andExpect(jsonPath("$.status").value("not_configured"));
+        mvc.perform(get("/api/admin/database")).andExpect(status().isUnauthorized());
+    }
 }

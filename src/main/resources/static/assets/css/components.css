@@ -464,3 +464,23 @@ textarea:focus {
 .switch[type="checkbox"] {
   padding: 3px;
 }
+
+.connection-status {
+  margin: 20px 36px 0;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+}
+.connection-copy { min-width: 0; overflow-wrap: anywhere; }
+.connection-copy small { display: block; color: var(--muted); margin-top: 5px; }
+.connection-dialog { margin: 0 0 18px; background: var(--bg); }
+@media (max-width: 640px) {
+  .connection-status { margin: 16px 18px 0; align-items: flex-start; flex-direction: column; }
+  .connection-dialog { margin: 0 0 18px; }
+}

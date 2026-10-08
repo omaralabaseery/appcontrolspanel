@@ -1,3 +1,4 @@
+import { connectionSummary, refreshConnection, updateConnectionView } from "./components/connection-status.js";
 import { chart } from "./components/activity-chart.js";
 import {
   $,
@@ -49,9 +50,10 @@ function head(actions = "") {
   return `<div class="page-heading"><div><h1>${titles[page]}</h1><p class="subtitle">${subtitles[page]}</p></div><div class="row">${actions}</div></div>`;
 }
 function mode() {
+  updateConnectionView(live);
   $("#mode-badge").textContent = live ? "Live Firebase" : "Demo mode";
   $("#mode-badge").className = `badge ${live ? "green" : "amber"}`;
-  $("#connection-button").textContent = live ? "Sign out" : "Connect Firebase";
+  $("#connection-button").textContent = live ? "Sign out" : "Sign in as admin";
   $("#sidebar-mode").innerHTML = live
     ? "Connected workspace<small>Firebase · authenticated admin</small>"
     : "Demo workspace<small>Sample data · no live changes</small>";
@@ -424,7 +426,7 @@ function integrationPage() {
     head(
       `<a class="button btn btn-outline-secondary" href="/swagger-ui.html" target="_blank" rel="noopener">${icon("code")} Open Swagger</a>`,
     ) +
-    `${databasePanel()}<div class="integration-grid"><section class="panel card"><div class="panel-head card-header"><h2>Firebase connection</h2>${badge(live ? "Connected" : "Not connected", live ? "green" : "amber")}</div><div class="panel-body card-body"><div class="step"><span class="step-number">1</span><div><strong>Configure your Firebase project</strong><p>Enable Authentication, Firestore, and Cloud Messaging. Add the public web configuration to assets/js/config/firebase-config.js.</p></div></div><div class="step"><span class="step-number">2</span><div><strong>Start the Spring Boot backend</strong><p>Set FIREBASE_ENABLED, FIREBASE_PROJECT_ID, and server-side Application Default Credentials. Keep service-account keys out of the browser and repository.</p></div></div><div class="step"><span class="step-number">3</span><div><strong>Authorize an administrator</strong><p>Create an email/password Firebase Auth account and grant its admin custom claim with a trusted Admin SDK environment.</p></div></div><div class="step"><span class="step-number">4</span><div><strong>Connect your mobile app</strong><p>Register installations and tokens; send heartbeats and sanitized telemetry. Check the application policy before opening the app.</p></div></div><button class="button primary btn btn-primary" id="integration-connect">${live ? "Manage connection" : "Connect Firebase"}</button><hr class="divider"><h3>Authorization</h3><div class="endpoint">Authorization: Bearer &lt;Firebase ID token&gt;</div><p class="hint">Admin endpoints require admin=true. Mobile endpoints derive the user ID from the token. Configuration lookup is public.</p></div></section><section class="panel card"><div class="panel-head card-header"><h2>REST API reference</h2>${badge("Spring Boot", "blue")}</div><div class="panel-body card-body">${endpoints.map(([method, url, desc]) => `<div class="endpoint-row">${badge(method, method === "GET" ? "green" : "blue")} <code>${escape(url)}</code><p>${desc}</p></div>`).join("")}</div></section></div>`
+    `${databasePanel()}<div class="integration-grid"><section class="panel card"><div class="panel-head card-header"><h2>Administrator access</h2>${badge(live ? "Signed in" : "Sign-in required", live ? "green" : "amber")}</div><div class="panel-body card-body"><div class="step"><span class="step-number">1</span><div><strong>Configure your Firebase project</strong><p>Enable Authentication, Firestore, and Cloud Messaging. Add the public web configuration to assets/js/config/firebase-config.js.</p></div></div><div class="step"><span class="step-number">2</span><div><strong>Start the Spring Boot backend</strong><p>Set FIREBASE_ENABLED, FIREBASE_PROJECT_ID, and server-side Application Default Credentials. Keep service-account keys out of the browser and repository.</p></div></div><div class="step"><span class="step-number">3</span><div><strong>Authorize an administrator</strong><p>Create an email/password Firebase Auth account and grant its admin custom claim with a trusted Admin SDK environment.</p></div></div><div class="step"><span class="step-number">4</span><div><strong>Connect your mobile app</strong><p>Register installations and tokens; send heartbeats and sanitized telemetry. Check the application policy before opening the app.</p></div></div><button class="button primary btn btn-primary" id="integration-connect">${live ? "Manage session" : "Sign in as admin"}</button><hr class="divider"><h3>Authorization</h3><div class="endpoint">Authorization: Bearer &lt;Firebase ID token&gt;</div><p class="hint">Admin endpoints require admin=true. Mobile endpoints derive the user ID from the token. Configuration lookup is public.</p></div></section><section class="panel card"><div class="panel-head card-header"><h2>REST API reference</h2>${badge("Spring Boot", "blue")}</div><div class="panel-body card-body">${endpoints.map(([method, url, desc]) => `<div class="endpoint-row">${badge(method, method === "GET" ? "green" : "blue")} <code>${escape(url)}</code><p>${desc}</p></div>`).join("")}</div></section></div>`
   );
 }
 async function connection() {
@@ -436,8 +438,10 @@ async function connection() {
   }
   dialog(
     "Connect your Firebase workspace",
-    `<p>Sign in with a Firebase Authentication administrator account. Configure the project in assets/js/config/firebase-config.js and start the configured backend first.</p><form id="login-form"><div class="field"><label for="email">Admin email</label><input type="email" id="email" autocomplete="username" required></div><div class="field"><label for="password">Password</label><input type="password" id="password" autocomplete="current-password" required></div><div id="login-error" role="alert"></div><div class="form-actions"><button class="button primary btn btn-primary" type="submit">Sign in securely</button></div></form>`,
+    `<div class="connection-status connection-dialog" data-connection-summary>${connectionSummary()}</div><p>Sign in with a Firebase Authentication administrator account. Configure the project in assets/js/config/firebase-config.js and start the configured backend first.</p><form id="login-form"><div class="field"><label for="email">Admin email</label><input type="email" id="email" autocomplete="username" required></div><div class="field"><label for="password">Password</label><input type="password" id="password" autocomplete="current-password" required></div><div id="login-error" role="alert"></div><div class="form-actions"><button class="button primary btn btn-primary" type="submit">Sign in securely</button></div></form>`,
   );
+  updateConnectionView(live);
+  refreshConnection();
   $("#login-form").onsubmit = async (e) => {
     e.preventDefault();
     const button = $("button[type=submit]", e.target);
@@ -446,7 +450,7 @@ async function connection() {
     try {
       await signIn($("#email").value, $("#password").value);
       $("#dialog").close();
-      toast("Connected to Firebase.");
+      toast("Signed in. Database workspace loaded.");
       render();
     } catch (error) {
       $("#login-error").textContent = error.message;
@@ -666,5 +670,6 @@ function bind() {
       });
   }
 }
+refreshConnection();
 window.addEventListener("hashchange", render);
 render();
