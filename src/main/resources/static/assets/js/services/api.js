@@ -122,19 +122,26 @@ function demo(path, options) {
   }
   if (p === "/admin/notifications") {
     if (options.method === "POST") {
+      const requests=Array.isArray(options.body)?clone(options.body):options.body.userIds.map(id=>({id,title:options.body.title,message:options.body.body}));
+      const all=String(requests[0].id)==="0";
+      const selected=all?users.map(u=>({...requests[0],id:u.id})):requests;
       const n = {
-        ...clone(options.body),
-        id: crypto.randomUUID(),
-        status: "simulated",
-        accepted: 0,
-        failed: 0,
-        createdAt: Date.now(),
+        requests, audience:all?"all":"selected", userIds:selected.map(r=>String(r.id)),
+        title:requests[0].title, body:requests[0].message, recipientCount:selected.length,
+        recipients:{items:selected.map(r=>({uid:String(r.id),title:r.title,message:r.message,status:"simulated",accepted:0,failed:0,unknown:0,fcmResults:devices.filter(d=>d.uid===String(r.id)).map(d=>({deviceId:d.id,status:"simulated"}))})),nextCursor:""},
+        id: crypto.randomUUID(), status: "simulated", accepted: 0, failed: 0, unknown:0, createdAt: Date.now(),
       };
       notifications.unshift(n);
       persist();
       return Promise.resolve(n);
     }
     return Promise.resolve({ items: clone(notifications), nextCursor: "" });
+  }
+  if (p.startsWith("/admin/notifications/")) {
+    const id=decodeURIComponent(p.split('/')[3]);
+    const item=notifications.find(n=>n.id===id);
+    if(!item) throw Error("Push request not found");
+    return Promise.resolve(clone(p.endsWith('/recipients')?item.recipients || {items:[],nextCursor:""}:item));
   }
   throw Error("Demo endpoint not available");
 }

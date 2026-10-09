@@ -2,7 +2,7 @@
 
 Base URL: `https://YOUR_HOST/api`. Interactive schema: `/swagger-ui.html`; OpenAPI JSON: `/v3/api-docs`.
 
-All routes except `GET /mobile/config` require `Authorization: Bearer <Firebase ID token>`. `/admin/**` additionally requires the boolean `admin=true` claim. A user cannot choose another UID for device registration, heartbeat or event ingestion: ownership comes from the verified token.
+All API routes except `GET /mobile/config` and `GET /connection` require `Authorization: Bearer <Firebase ID token>`. `/admin/**` additionally requires the boolean `admin=true` claim. A user cannot choose another UID for device registration, heartbeat or event ingestion: ownership comes from the verified token.
 
 ## Admin APIs
 
@@ -16,24 +16,36 @@ All routes except `GET /mobile/config` require `Authorization: Bearer <Firebase 
 | GET | `/admin/users/{uid}` | User and linked devices; no FCM tokens returned |
 | GET | `/admin/events?uid=&cursor=` | All events or an exact UID |
 | GET | `/admin/notifications?cursor=` | Notification history |
-| POST | `/admin/notifications` | Send to 1–100 user IDs; requires `Idempotency-Key` header |
+| POST | `/admin/notifications` | Personalized array of 1–100 IDs or all-users ID 0; requires `Idempotency-Key` |
+| GET | `/admin/notifications/{id}` | Request summary plus first page of recipients / FCM results |
+| GET | `/admin/notifications/{id}/recipients?cursor=` | Remaining recipients, 50 per page |
 | GET | `/admin/settings` | Current version and maintenance policy |
 | PUT | `/admin/settings` | Replace complete validated policy; writes an audit record |
 
 List responses: `{ "items": [...], "nextCursor": "" }`. Pass non-empty nextCursor to retrieve the next page. Paging order is document ID; the UI sorts loaded events/history by timestamp. Search/status filters operate on loaded records; use the server-side UID filter for a user's logs. This avoids silently claiming that a first-page search covers the entire database.
 
-### Push request
+### Push requests, recipients and FCM results
 
-```http
-POST /api/admin/notifications
-Authorization: Bearer <ADMIN_ID_TOKEN>
-Idempotency-Key: 863f145e-41a8-4cda-b4ea-04f3d77dccfa
-Content-Type: application/json
+`POST /api/admin/notifications` (alias `/api/admin/notifications/requests`) requires an admin token and `Idempotency-Key`. Send this body to **all registered users**, including users beyond the first UI page:
 
-{"userIds":["firebase-uid-1","firebase-uid-2"],"title":"Order update","body":"Your order is on its way."}
+```json
+[{"id":0,"title":"test","message":"test"}]
 ```
 
-The server gathers registered tokens for those users, deduplicates them, and sends batches of up to 500. Status values: `processing`, `accepted`, `partial`, `no_devices`, `unknown`. `accepted` means FCM accepted messages, not confirmed display or delivery. Reusing an idempotency key for the same payload returns its existing result without sending again. Reusing it for different content is rejected. If network/provider failure leaves `unknown` or `processing`, inspect before retrying; use the same key to read its status. A new key may duplicate already delivered messages. For large campaigns add a durable background job/queue before increasing limits. This endpoint can be called by other authorized application features via a trusted admin integration identity; never give an ordinary mobile client an admin claim.
+Send different content to selected users:
+
+```json
+[{"id":"FIREBASE_UID_1","title":"First title","message":"First message"},
+ {"id":"FIREBASE_UID_2","title":"Second title","message":"Second message"}]
+```
+
+Numeric IDs such as 1 and 2 are accepted and converted to strings; they only work if the corresponding user document IDs are literally `1` and `2`. Use the actual Firebase UID in this project. ID 0 is reserved for all users and cannot be mixed with other entries. Duplicate IDs are rejected. Maximum 100 selected entries; the broadcast walks the full users collection in pages of 100. The existing `{userIds,title,body}` payload remains accepted.
+
+The response contains `id`, the normalized `requests`, `audience`, `recipientCount`, `accepted`, `failed`, `unknown`, `status`, and `recipients: {items,nextCursor}`. Each recipient includes its UID, title, message, counts and `fcmResults` with `deviceId`, status, and FCM `messageId` or `errorCode`. It never exposes tokens. History is stored in `notifications/{requestId}` with recipient details in its `recipients` subcollection.
+
+FCM calls contain at most 500 messages each. Acceptance is not delivery confirmation. Recipients with no registered token return `no_devices`; missing users return `user_not_found`. In demo mode the status is `simulated`, never an invented FCM success.
+
+The same idempotency key and payload returns the stored request without resending. A different payload with the same key is rejected. Indeterminate provider errors or interruption leave `unknown` or `processing`; inspect saved recipient results before deciding on another send. Broadcast runs synchronously in this version; large campaigns need a durable worker and queue before production-scale use. User membership can change during pagination; this is not a frozen audience snapshot.
 
 ### Settings request
 
@@ -121,3 +133,33 @@ Handle 503/network errors with an explicit retry screen or a product-approved ca
 - 500: unexpected provider/database failure; inspect server logs.
 
 Use exponential backoff for safe reads/heartbeat; preserve event IDs and push idempotency keys when retrying writes. Server exceptions inside Firestore transactions may surface as a generic 500; inspect operational logs rather than blindly changing request IDs.
+
+## Request Input.json and Output.json
+
+Include `input` and `output` in `POST /api/mobile/events`:
+
+```json
+{"eventId":"request-uuid-1234","feature":"Order details screen","method":"GET","path":"/orders/{id}","status":500,"durationMs":2400,"message":"Screen failed to open after API timeout","input":{"params":{"id":"sample-order"},"body":null},"output":{"status":500,"body":{"error":{"code":"TIMEOUT","message":"Order service did not respond"}}}}
+```
+
+The server derives `uid` from the caller's Firebase token. Both payloads can be JSON objects, arrays, primitives or null; each is limited to 16 KB and depth 12. Known password, token, authorization, cookie, key and card credential fields are recursively redacted. The mobile app must sanitize other personal data before sending. Firestore stores serialized `inputJson` and `outputJson` to preserve nested JSON arrays; the admin API returns parsed `input` and `output`. Existing logs without payloads show "No payload was captured". The UI displays and downloads Input.json and Output.json inside Requests & logs. Overview no longer fetches or displays request rows.
+
+## Register device under mobile settings
+
+`POST /api/mobile/settings/register-device` is an alias of `/api/mobile/devices`, using the same authenticated ownership and update behavior:
+
+```json
+{"id":"persistent-device-uuid","pushNotificationToken":"FCM_TOKEN","deviceVersion":"2.4.1","platform":"android","model":"Samsung Galaxy S24","build":241,"language":"ar"}
+```
+
+Here `id` is the installation ID, not the user ID. The original field names `installationId`, `fcmToken` and `version` remain supported. `platform`, `build`, `model` and `language` are still required. An empty/null token removes push registration. Device version and integer build describe the installed app release.
+
+## Enable or disable individual releases
+
+Each platform in the settings may now contain:
+
+```json
+{"minimumBuild":240,"latestBuild":241,"version":"2.4.1","storeUrl":"https://play.google.com/store/apps?id=YOUR_PACKAGE","releases":[{"build":240,"version":"2.4.0","enabled":false},{"build":241,"version":"2.4.1","enabled":true}]}
+```
+
+The mobile config response adds `versionEnabled` and `allowAccess`. An explicitly disabled build receives `action: version_disabled`, `allowAccess: false`, `updateRequired: true`, the localized update message and store URL. Maintenance has first priority. Enabling a build does not override the minimum supported build; unlisted builds follow the existing minimum/latest policy. Select an enabled latest build before disabling the old latest, to avoid redirecting users to a disabled target. Up to 100 unique rules per platform; omitted release lists remain compatible with old settings. The mobile app must enforce the action once connected in phase two.

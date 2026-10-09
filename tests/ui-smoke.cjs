@@ -2,7 +2,7 @@ const {chromium}=require('playwright');
 const base=process.env.PANEL_TEST_URL||'http://localhost:8080';
 (async()=>{
  const browser=await chromium.launch({headless:true}); const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto(base);await page.getByRole('heading',{name:'Recent application requests'}).waitFor();
+ await page.goto(base);await page.getByRole('heading',{name:'Overview',exact:true}).waitFor();if(await page.locator('#main table').count())throw Error('Overview must not contain request table');
  await page.screenshot({path:require('os').tmpdir()+'/appcontrol-desktop.png',fullPage:true,animations:"disabled"});
  await page.locator('a[data-page=users]').click();await page.locator('#user-search').fill('Sarah');await page.getByRole('button',{name:'View profile'}).click();await page.getByRole('heading',{name:'Sarah Ahmed',exact:true}).waitFor();await page.getByRole('button',{name:'View requests & feature activity'}).click();await page.waitForTimeout(150);if(!await page.locator('#log-uid').inputValue())throw Error('User filter not applied');
  await page.locator('a[data-page=notifications]').click();await page.locator('#single-user').selectOption('usr_1001');await page.locator('#push-title').fill('Test notification');await page.locator('#push-body').fill('A test message');await page.getByRole('button',{name:'Review notification'}).click();await page.getByRole('button',{name:'Simulate notification'}).click();await page.locator('#notice-table').getByText('Test notification',{exact:true}).waitFor();

@@ -30,7 +30,13 @@ public class PanelService {
     }
     Map<String,Object> map(Object o) { return mapper.convertValue(o,new TypeReference<Map<String,Object>>(){}); }
     Map<String,Object> row(DocumentSnapshot d) {
-        var m=new HashMap<String,Object>(d.getData()==null?Map.of():d.getData()); m.put("id",d.getId()); m.remove("fcmToken"); return m;
+        var m=new HashMap<String,Object>(d.getData()==null?Map.of():d.getData()); m.put("id",d.getId()); m.remove("fcmToken");
+        for(String field:List.of("input","output")) if(m.containsKey(field+"Json")) {
+            Object json=m.remove(field+"Json");
+            try {m.put(field,json==null?null:mapper.readTree(json.toString()));}
+            catch(Exception ex) {m.put(field,null);}
+        }
+        return m;
     }
     long count(Query q) throws Exception { return q.count().get().get().getCount(); }
     public Map<String,Object> stats() throws Exception {
@@ -107,7 +113,10 @@ public class PanelService {
         var db=db(); var ref=db.collection("events").document(hash(uid+":"+event.eventId()));
         db.runTransaction(t -> {
             if(t.get(ref).get().exists()) return null;
-            var data=map(event); data.put("uid",uid); data.put("createdAt",System.currentTimeMillis());
+            var data=map(event); data.remove("input");data.remove("output");
+            data.put("inputJson",mapper.writeValueAsString(TelemetryPayload.normalize(event.input(),mapper)));
+            data.put("outputJson",mapper.writeValueAsString(TelemetryPayload.normalize(event.output(),mapper)));
+            data.put("uid",uid); data.put("createdAt",System.currentTimeMillis());
             t.set(ref,data); return null;
         }).get();
     }

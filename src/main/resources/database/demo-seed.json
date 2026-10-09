@@ -297,7 +297,9 @@
       "message": "[TEST] Home screen opened successfully",
       "createdAt": 0,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"POST\", \"path\": \"/mobile/screens/home\", \"context\": {\"screen\": \"Open home screen\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"[TEST] Home screen opened successfully\", \"success\": true}}"
     }
   },
   {
@@ -312,7 +314,9 @@
       "message": "Products loaded",
       "createdAt": -420000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/products\", \"context\": {\"screen\": \"Browse products\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Products loaded\", \"success\": true}}"
     }
   },
   {
@@ -327,7 +331,9 @@
       "message": "Payment gateway timed out. Reference: PAY_TIMEOUT",
       "createdAt": -840000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"POST\", \"path\": \"/orders\", \"context\": {\"screen\": \"Checkout\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 500, \"body\": {\"message\": \"Payment gateway timed out. Reference: PAY_TIMEOUT\", \"success\": false}}"
     }
   },
   {
@@ -342,7 +348,9 @@
       "message": "Order status loaded",
       "createdAt": -1260000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/orders/{id}\", \"context\": {\"screen\": \"Order tracking\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Order status loaded\", \"success\": true}}"
     }
   },
   {
@@ -357,7 +365,9 @@
       "message": "Profile validation failed: missing display name",
       "createdAt": -1680000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"PATCH\", \"path\": \"/profile\", \"context\": {\"screen\": \"Profile\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 422, \"body\": {\"message\": \"Profile validation failed: missing display name\", \"success\": false}}"
     }
   },
   {
@@ -372,7 +382,9 @@
       "message": "Search completed",
       "createdAt": -2100000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/search\", \"context\": {\"screen\": \"Search\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Search completed\", \"success\": true}}"
     }
   },
   {
@@ -387,7 +399,9 @@
       "message": "Inbox loaded",
       "createdAt": -2520000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/notifications\", \"context\": {\"screen\": \"Notifications\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Inbox loaded\", \"success\": true}}"
     }
   },
   {
@@ -402,7 +416,9 @@
       "message": "Addresses loaded",
       "createdAt": -2940000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/addresses\", \"context\": {\"screen\": \"Address book\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Addresses loaded\", \"success\": true}}"
     }
   },
   {
@@ -417,7 +433,9 @@
       "message": "[TEST] Screen failed to open: order details API timed out; retry button displayed",
       "createdAt": -3360000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"POST\", \"path\": \"/mobile/screens/order-details\", \"context\": {\"screen\": \"Open order details screen\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 500, \"body\": {\"message\": \"[TEST] Screen failed to open: order details API timed out; retry button displayed\", \"success\": false}}"
     }
   },
   {
@@ -432,7 +450,9 @@
       "message": "Products loaded",
       "createdAt": -3780000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/products\", \"context\": {\"screen\": \"Browse products\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Products loaded\", \"success\": true}}"
     }
   },
   {
@@ -447,7 +467,9 @@
       "message": "Payment gateway timed out. Reference: PAY_TIMEOUT",
       "createdAt": -4200000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"POST\", \"path\": \"/orders\", \"context\": {\"screen\": \"Checkout\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 500, \"body\": {\"message\": \"Payment gateway timed out. Reference: PAY_TIMEOUT\", \"success\": false}}"
     }
   },
   {
@@ -462,7 +484,9 @@
       "message": "Order status loaded",
       "createdAt": -4620000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/orders/{id}\", \"context\": {\"screen\": \"Order tracking\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Order status loaded\", \"success\": true}}"
     }
   },
   {
@@ -477,7 +501,9 @@
       "message": "Profile validation failed: missing display name",
       "createdAt": -5040000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"PATCH\", \"path\": \"/profile\", \"context\": {\"screen\": \"Profile\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 422, \"body\": {\"message\": \"Profile validation failed: missing display name\", \"success\": false}}"
     }
   },
   {
@@ -492,7 +518,9 @@
       "message": "Search completed",
       "createdAt": -5460000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/search\", \"context\": {\"screen\": \"Search\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Search completed\", \"success\": true}}"
     }
   },
   {
@@ -507,7 +535,9 @@
       "message": "Inbox loaded",
       "createdAt": -5880000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/notifications\", \"context\": {\"screen\": \"Notifications\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Inbox loaded\", \"success\": true}}"
     }
   },
   {
@@ -522,7 +552,9 @@
       "message": "Addresses loaded",
       "createdAt": -6300000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/addresses\", \"context\": {\"screen\": \"Address book\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Addresses loaded\", \"success\": true}}"
     }
   },
   {
@@ -537,7 +569,9 @@
       "message": "[TEST] Screen rendering failed: profile displayName was missing",
       "createdAt": -6720000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"POST\", \"path\": \"/mobile/screens/profile\", \"context\": {\"screen\": \"Open profile screen\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 500, \"body\": {\"message\": \"[TEST] Screen rendering failed: profile displayName was missing\", \"success\": false}}"
     }
   },
   {
@@ -552,7 +586,9 @@
       "message": "Products loaded",
       "createdAt": -7140000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/products\", \"context\": {\"screen\": \"Browse products\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Products loaded\", \"success\": true}}"
     }
   },
   {
@@ -567,7 +603,9 @@
       "message": "Payment gateway timed out. Reference: PAY_TIMEOUT",
       "createdAt": -7560000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"POST\", \"path\": \"/orders\", \"context\": {\"screen\": \"Checkout\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 500, \"body\": {\"message\": \"Payment gateway timed out. Reference: PAY_TIMEOUT\", \"success\": false}}"
     }
   },
   {
@@ -582,7 +620,9 @@
       "message": "Order status loaded",
       "createdAt": -7980000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/orders/{id}\", \"context\": {\"screen\": \"Order tracking\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Order status loaded\", \"success\": true}}"
     }
   },
   {
@@ -597,7 +637,9 @@
       "message": "Profile validation failed: missing display name",
       "createdAt": -8400000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"PATCH\", \"path\": \"/profile\", \"context\": {\"screen\": \"Profile\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 422, \"body\": {\"message\": \"Profile validation failed: missing display name\", \"success\": false}}"
     }
   },
   {
@@ -612,7 +654,9 @@
       "message": "Search completed",
       "createdAt": -8820000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/search\", \"context\": {\"screen\": \"Search\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Search completed\", \"success\": true}}"
     }
   },
   {
@@ -627,7 +671,9 @@
       "message": "Inbox loaded",
       "createdAt": -9240000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/notifications\", \"context\": {\"screen\": \"Notifications\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Inbox loaded\", \"success\": true}}"
     }
   },
   {
@@ -642,7 +688,9 @@
       "message": "Addresses loaded",
       "createdAt": -9660000,
       "testData": true,
-      "seedBatch": "panel-demo-v1"
+      "seedBatch": "panel-demo-v1",
+      "inputJson": "{\"method\": \"GET\", \"path\": \"/addresses\", \"context\": {\"screen\": \"Address book\"}, \"body\": {\"sample\": true}}",
+      "outputJson": "{\"status\": 200, \"body\": {\"message\": \"Addresses loaded\", \"success\": true}}"
     }
   },
   {

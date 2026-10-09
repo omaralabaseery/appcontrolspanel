@@ -73,6 +73,8 @@ export const events = Array.from({ length: 24 }, (_, i) => {
     status,
     durationMs,
     message,
+    input: { method, path, body: method === "GET" ? null : { itemId: `sample_${i % 4}`, quantity: 1 }, context: { screen: feature, language: users[i % 8].language } },
+    output: { status, body: status >= 400 ? { error: { code: status===500 ? "PAY_TIMEOUT" : "VALIDATION_ERROR", message } } : { success: true, message } },
     createdAt: now - i * 420000,
   };
 });
@@ -84,12 +86,14 @@ export const initialPolicy = {
   updateEn: "A new version is available. Please update your app to continue.",
   updateAr: "يتوفر إصدار جديد. يرجى تحديث التطبيق للمتابعة.",
   android: {
+    releases: [{build:240,version:"2.4.0",enabled:false},{build:241,version:"2.4.1",enabled:true}],
     minimumBuild: 240,
     latestBuild: 241,
     version: "2.4.1",
     storeUrl: "https://play.google.com/store/apps?id=com.example.app",
   },
   ios: {
+    releases: [{build:240,version:"2.4.0",enabled:false},{build:241,version:"2.4.1",enabled:true}],
     minimumBuild: 240,
     latestBuild: 241,
     version: "2.4.1",

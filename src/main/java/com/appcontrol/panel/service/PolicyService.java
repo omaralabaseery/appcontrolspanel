@@ -15,6 +15,14 @@ public final class PolicyService {
     }
     private static void validatePlatform(PlatformPolicy p,String host) {
         if(p.minimumBuild()>p.latestBuild()) throw new IllegalArgumentException("Minimum build cannot exceed latest build");
+        var seen=new java.util.HashSet<Long>();
+        for(var release:p.releases()) {
+            if(release==null || release.build()<1 || release.enabled()==null || release.version()==null || release.version().isBlank() || release.version().length()>30)
+                throw new IllegalArgumentException("Invalid release rule");
+            if(!seen.add(release.build())) throw new IllegalArgumentException("Duplicate release build");
+            if(release.build()==p.latestBuild() && !release.enabled())
+                throw new IllegalArgumentException("Latest build must be enabled; select an enabled latest build first");
+        }
         URI uri;
         try { uri=URI.create(p.storeUrl()); } catch(Exception e) { throw new IllegalArgumentException("Invalid store URL"); }
         if(!"https".equals(uri.getScheme()) || !host.equals(uri.getHost()) || uri.getUserInfo()!=null || uri.getPort()!=-1)
@@ -25,10 +33,12 @@ public final class PolicyService {
         if(build<1) throw new IllegalArgumentException("build must be positive");
         boolean ar=language.toLowerCase().startsWith("ar");
         var v=platform.equals("ios")?p.ios():p.android();
-        boolean required=build<v.minimumBuild(), available=build<v.latestBuild();
-        String action=p.maintenance()?"maintenance":required?"force_update":available?"optional_update":"allow";
-        String message=p.maintenance()?(ar?p.maintenanceAr():p.maintenanceEn()):available?(ar?p.updateAr():p.updateEn()):"";
+        boolean disabled=v.releases().stream().anyMatch(r -> r.build()==build && Boolean.FALSE.equals(r.enabled()));
+        boolean required=build<v.minimumBuild() || disabled, available=build<v.latestBuild();
+        String action=p.maintenance()?"maintenance":disabled?"version_disabled":required?"force_update":available?"optional_update":"allow";
+        String message=p.maintenance()?(ar?p.maintenanceAr():p.maintenanceEn()):(required||available)?(ar?p.updateAr():p.updateEn()):"";
         return Map.of("action",action,"message",message,"language",ar?"ar":"en","updateRequired",required,
-            "updateAvailable",available,"storeUrl",v.storeUrl(),"latestBuild",v.latestBuild(),"latestVersion",v.version());
+            "updateAvailable",available,"storeUrl",v.storeUrl(),"latestBuild",v.latestBuild(),"latestVersion",v.version(),
+            "versionEnabled",!disabled && build>=v.minimumBuild(),"allowAccess",!p.maintenance() && !required);
     }
 }

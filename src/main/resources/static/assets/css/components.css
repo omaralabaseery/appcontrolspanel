@@ -484,3 +484,16 @@ textarea:focus {
   .connection-status { margin: 16px 18px 0; align-items: flex-start; flex-direction: column; }
   .connection-dialog { margin: 0 0 18px; }
 }
+
+/* User request payloads and per-build availability. */
+.json-panel { margin: 18px 0; min-width: 0; }
+.json-panel pre { background: #f5f7f9; border: 1px solid var(--border); border-radius: 5px; padding: 14px; max-height: 320px; overflow: auto; font-size: 11px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.json-panel h3 { margin: 0; }
+.release-toggle { display: flex; align-items: center; gap: 7px; margin: 0; }
+.release-toggle input { width: 16px; }
+[data-release-build] { min-width: 80px; }
+[data-release-version] { min-width: 90px; }
+.brand { padding: 0 0 29px; gap: 9px; font-size: 19px; }
+.brand-logo { display: inline-block; width: 76px; height: 36px; position: relative; overflow: hidden; flex-shrink: 0; }
+.brand-logo img { position: absolute; width: 100px; max-width: none; height: auto; left: -13px; top: -32px; mix-blend-mode: multiply; }
+@media (max-width: 640px) { .json-panel .row { flex-wrap: wrap; } }

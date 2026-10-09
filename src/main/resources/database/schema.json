@@ -2,91 +2,127 @@
   "schemaVersion": 1,
   "database": "(default)",
   "timestampFormat": "integer: Unix epoch milliseconds (not Firestore Timestamp)",
-
   "collections": [
     {
-      "name":"users",
-      "documentId":"Firebase Authentication UID",
-      "createdBy":"POST /api/mobile/devices",
-      "fields":{"name":"string; from Firebase Auth",
-      "email":"string; from Firebase Auth, empty if unavailable",
-      "language":"ar | en","deviceCount":"integer >= 0; maintained transactionally",
-      "lastSeen":"integer; server epoch ms",
-      "createdAt":"integer; server epoch ms"
+      "name": "users",
+      "documentId": "Firebase Authentication UID",
+      "createdBy": "POST /api/mobile/devices",
+      "fields": {
+        "name": "string; from Firebase Auth",
+        "email": "string; from Firebase Auth, empty if unavailable",
+        "language": "ar | en",
+        "deviceCount": "integer >= 0; maintained transactionally",
+        "lastSeen": "integer; server epoch ms",
+        "createdAt": "integer; server epoch ms"
       }
     },
-
     {
-      "name":"installations",
-      "documentId":"persistent random installation ID, 8–128 letters/digits/_/-",
-      "createdBy":"POST /api/mobile/devices",
-      "fields":{"uid":"string; token UID, empty after unlink",
-      "platform":"android | ios","model":"string <= 100",
-      "build":"integer >= 1","version":"string <= 30",
-      "language":"ar | en","fcmToken":"string <= 4096; server-only, empty if opted out",
-      "createdAt":"integer; first registration epoch ms",
-      "lastSeen":"integer; server epoch ms, 0 after unlink"
+      "name": "installations",
+      "documentId": "persistent random installation ID, 8–128 letters/digits/_/-",
+      "createdBy": "POST /api/mobile/devices",
+      "fields": {
+        "uid": "string; token UID, empty after unlink",
+        "platform": "android | ios",
+        "model": "string <= 100",
+        "build": "integer >= 1",
+        "version": "string <= 30",
+        "language": "ar | en",
+        "fcmToken": "string <= 4096; server-only, empty if opted out",
+        "createdAt": "integer; first registration epoch ms",
+        "lastSeen": "integer; server epoch ms, 0 after unlink"
       }
     },
-
     {
-      "name":"events",
-      "documentId":"SHA-256(uid + ':' + eventId)",
-      "createdBy":"POST /api/mobile/events",
-      "fields":{"uid":"string; verified token UID",
-      "eventId":"string; stable retry ID, 8–128 letters/digits/_/-",
-      "feature":"string <= 80","method":"GET | POST | PUT | PATCH | DELETE | LOCAL",
-      "path":"string; sanitized route template, no query string",
-      "status":"integer 100–599","durationMs":"integer 0–3600000",
-      "message":"string <= 1000; sanitized diagnostic message",
-      "createdAt":"integer; server epoch ms"
+      "name": "events",
+      "documentId": "SHA-256(uid + ':' + eventId)",
+      "createdBy": "POST /api/mobile/events",
+      "fields": {
+        "uid": "string; verified token UID",
+        "eventId": "string; stable retry ID, 8–128 letters/digits/_/-",
+        "feature": "string <= 80",
+        "method": "GET | POST | PUT | PATCH | DELETE | LOCAL",
+        "path": "string; sanitized route template, no query string",
+        "status": "integer 100–599",
+        "durationMs": "integer 0–3600000",
+        "message": "string <= 1000; sanitized diagnostic message",
+        "createdAt": "integer; server epoch ms",
+        "inputJson": "string; sanitized JSON, max 16 KB before redaction; API exposes parsed input",
+        "outputJson": "string; sanitized JSON, max 16 KB before redaction; API exposes parsed output"
       }
     },
-
     {
-      "name":"notifications",
-      "documentId":"SHA-256(actor + ':' + Idempotency-Key)",
-      "createdBy":"POST /api/admin/notifications","fields":{"actor":"string; admin UID",
-      "userIds":"array<string>; 1–100 UIDs","title":"string <= 100","body":"string <= 1000",
-      "fingerprint":"string; SHA-256 of serialized payload",
-      "status":"processing | accepted | partial | no_devices | unknown",
-      "accepted":"integer >= 0; absent while processing/unknown",
-      "failed":"integer >= 0; absent while processing/unknown",
-      "createdAt":"integer; server epoch ms"}},
-
-    {
-      "name":"settings",
-      "documentId":"application",
-      "createdBy":"POST /api/admin/database/initialize or PUT /api/admin/settings",
-      "fields":{"maintenance":"boolean",
-      "maintenanceEn":"string; required, <= 1000",
-      "maintenanceAr":"string; required, <= 1000",
-      "updateEn":"string; required, <= 1000",
-      "updateAr":"string; required, <= 1000",
-      "android":"map: {minimumBuild: integer >= 1, latestBuild: integer >= minimumBuild, version: string, storeUrl: official HTTPS Google Play URL}",
-      "ios":"map: {minimumBuild: integer >= 1, latestBuild: integer >= minimumBuild, version: string, storeUrl: official HTTPS App Store URL}"
+      "name": "notifications",
+      "documentId": "SHA-256(actor + ':' + Idempotency-Key)",
+      "createdBy": "POST /api/admin/notifications",
+      "fields": {
+        "actor": "string; admin UID",
+        "userIds": "array<string>; 1–100 UIDs",
+        "title": "string <= 100",
+        "body": "string <= 1000",
+        "fingerprint": "string; SHA-256 of serialized payload",
+        "status": "processing | accepted | partial | no_devices | unknown",
+        "accepted": "integer >= 0; absent while processing/unknown",
+        "failed": "integer >= 0; absent while processing/unknown",
+        "createdAt": "integer; server epoch ms",
+        "requests": "array<{id:string,title:string,message:string}>; id 0 means all users",
+        "audience": "all | selected",
+        "recipientCount": "integer; number of recipients processed",
+        "unknown": "integer; indeterminate FCM results",
+        "noDevices": "integer; recipients without tokens",
+        "missingUsers": "integer; selected IDs not found",
+        "completedAt": "integer; epoch ms when finished"
+      },
+      "subcollections": {
+        "recipients": {
+          "documentId": "recipient UID",
+          "fields": {
+            "uid": "string",
+            "title": "string",
+            "message": "string",
+            "status": "processing | accepted | partial | no_devices | user_not_found | unknown",
+            "accepted": "integer",
+            "failed": "integer",
+            "unknown": "integer",
+            "fcmResults": "array<{deviceId,status,messageId?,errorCode?}>; tokens are never stored"
+          }
+        }
       }
     },
-
     {
-      "name":"audit",
-      "documentId":"Firestore-generated ID",
-      "createdBy":"database initialization or policy update",
-      "fields":{"action":"database.initialize | policy.update",
-      "actor":"string; admin UID","createdAt":"integer; server epoch ms",
-      "policy":"map; policy snapshot, only for policy.update",
-      "createdDocuments":"array<string>; only for database.initialize"
+      "name": "settings",
+      "documentId": "application",
+      "createdBy": "POST /api/admin/database/initialize or PUT /api/admin/settings",
+      "fields": {
+        "maintenance": "boolean",
+        "maintenanceEn": "string; required, <= 1000",
+        "maintenanceAr": "string; required, <= 1000",
+        "updateEn": "string; required, <= 1000",
+        "updateAr": "string; required, <= 1000",
+        "android": "map: {minimumBuild: integer >= 1, latestBuild: integer >= minimumBuild, version: string, storeUrl: official HTTPS Google Play URL}; optional releases: array<{build:integer,version:string,enabled:boolean}>, max 100; latest build cannot be disabled",
+        "ios": "map: {minimumBuild: integer >= 1, latestBuild: integer >= minimumBuild, version: string, storeUrl: official HTTPS App Store URL}; optional releases: array<{build:integer,version:string,enabled:boolean}>, max 100; latest build cannot be disabled"
       }
     },
-
     {
-      "name":"_meta",
-      "documentId":"schema",
-      "createdBy":"POST /api/admin/database/initialize",
-      "fields":{"schemaVersion":"integer; 1",
-      "collectionNames":"array<string>; manifest collection names",
-      "createdAt":"integer; server epoch ms",
-      "createdBy":"string; admin UID"
+      "name": "audit",
+      "documentId": "Firestore-generated ID",
+      "createdBy": "database initialization or policy update",
+      "fields": {
+        "action": "database.initialize | policy.update",
+        "actor": "string; admin UID",
+        "createdAt": "integer; server epoch ms",
+        "policy": "map; policy snapshot, only for policy.update",
+        "createdDocuments": "array<string>; only for database.initialize"
+      }
+    },
+    {
+      "name": "_meta",
+      "documentId": "schema",
+      "createdBy": "POST /api/admin/database/initialize",
+      "fields": {
+        "schemaVersion": "integer; 1",
+        "collectionNames": "array<string>; manifest collection names",
+        "createdAt": "integer; server epoch ms",
+        "createdBy": "string; admin UID"
       }
     }
   ]

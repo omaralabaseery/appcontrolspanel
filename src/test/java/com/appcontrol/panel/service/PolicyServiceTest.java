@@ -33,4 +33,22 @@ class PolicyServiceTest {
             assertThrows(IllegalArgumentException.class,()->PolicyService.validate(new Policy(false,"m","m","u","u",v,p.ios())));
         }
     }
+    @Test void disabledBuildBlocksAccessAndCanBeEnabledAgain() {
+        var p=policy(false);
+        var disabled=new PlatformPolicy(240,250,"2.5.0",p.android().storeUrl(),java.util.List.of(new ReleaseRule(245,"2.4.5",false)));
+        var changed=new Policy(false,"Maintenance","صيانة","Update","تحديث",disabled,p.ios());
+        PolicyService.validate(changed);
+        var result=PolicyService.evaluate(changed,"android",245,"ar");
+        assertEquals("version_disabled",result.get("action"));assertEquals(false,result.get("allowAccess"));assertEquals(false,result.get("versionEnabled"));assertEquals("تحديث",result.get("message"));
+        assertEquals("allow",PolicyService.evaluate(changed,"android",250,"en").get("action"));
+        var enabled=new PlatformPolicy(240,250,"2.5.0",p.android().storeUrl(),java.util.List.of(new ReleaseRule(245,"2.4.5",true)));
+        assertEquals(true,PolicyService.evaluate(new Policy(false,"m","m","u","u",enabled,p.ios()),"android",245,"en").get("allowAccess"));
+    }
+    @Test void rejectsDisabledLatestAndDuplicateRules() {
+        var p=policy(false);
+        for(var rules:java.util.List.of(java.util.List.of(new ReleaseRule(250,"2.5.0",false)),java.util.List.of(new ReleaseRule(245,"a",true),new ReleaseRule(245,"b",false)))) {
+            var platform=new PlatformPolicy(240,250,"2.5.0",p.android().storeUrl(),rules);
+            assertThrows(IllegalArgumentException.class,()->PolicyService.validate(new Policy(false,"m","m","u","u",platform,p.ios())));
+        }
+    }
 }
