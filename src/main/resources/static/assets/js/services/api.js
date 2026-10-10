@@ -23,6 +23,7 @@ function persist() {
 }
 const clone = (x) => structuredClone(x);
 export async function signIn(email, password) {
+  if (window.PANEL_CONFIG?.reviewOnly) throw Error("This review preview uses sample data. Admin sign-in is available on the hosted backend.");
   const config = window.PANEL_CONFIG.firebase;
   if (!config.apiKey || !config.projectId)
     throw Error(

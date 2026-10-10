@@ -10,6 +10,7 @@ const labels = {
   backend_unavailable: "Backend unavailable",
 };
 export function connectionSummary() {
+  if (window.PANEL_CONFIG?.reviewOnly) return `<div class="connection-copy"><div><span class="badge blue">Review preview</span> <strong>Demo workspace</strong></div><small>Sample data only · changes are saved in this browser · notifications are simulated.</small></div>`;
   const frontendProject = window.PANEL_CONFIG?.firebase?.projectId || "Not configured";
   const mismatch = state.projectId && state.projectId !== frontendProject;
   const color = state.status === "connected" && !mismatch ? "green" : "amber";
@@ -31,6 +32,7 @@ export function updateConnectionView(live = authenticated) {
   });
 }
 export async function refreshConnection() {
+  if (window.PANEL_CONFIG?.reviewOnly) { updateConnectionView(false); return; }
   if (pending) return;
   pending = true;
   updateConnectionView();

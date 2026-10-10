@@ -54,7 +54,7 @@ function mode() {
   updateConnectionView(live);
   $("#mode-badge").textContent = live ? "Live Firebase" : "Demo mode";
   $("#mode-badge").className = `badge ${live ? "green" : "amber"}`;
-  $("#connection-button").textContent = live ? "Sign out" : "Sign in as admin";
+  $("#connection-button").textContent = window.PANEL_CONFIG?.reviewOnly ? "About this preview" : live ? "Sign out" : "Sign in as admin";
   $("#sidebar-mode").innerHTML = live
     ? "Connected workspace<small>Firebase · authenticated admin</small>"
     : "Demo workspace<small>Sample data · no live changes</small>";
@@ -445,6 +445,10 @@ function integrationPage() {
   );
 }
 async function connection() {
+  if (window.PANEL_CONFIG?.reviewOnly) {
+    dialog("Review preview", "<p>Explore the control panel using sample users, requests and devices. Changes are saved only in your browser; push notifications are simulated. No Firebase connection or admin account is needed.</p>");
+    return;
+  }
   if (live) {
     await signOut();
     toast("Signed out. Demo workspace restored.");
