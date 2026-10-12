@@ -26,6 +26,7 @@ class ApiContractTest {
     @MockitoBean PushRequestService pushes;
     @MockitoBean DatabaseService database;
     @MockitoBean DemoSeedService seeds;
+    @MockitoBean AppEventService appEvents;
     private static final String REG="""
         {"id":"device_test_001","pushNotificationToken":"test-token","deviceVersion":"2.4.1",
          "platform":"android","model":"Test","build":241,"language":"en"}
@@ -34,7 +35,7 @@ class ApiContractTest {
         when(panel.policy()).thenReturn(PolicyService.defaults());
         when(panel.page(anyString(),anyString(),nullable(String.class))).thenReturn(Map.of("items",List.of(),"nextCursor",""));
     }
-    @ParameterizedTest @ValueSource(strings={"/api/admin/stats","/api/admin/users","/api/admin/users/user_1","/api/admin/events","/api/admin/notifications","/api/admin/notifications/push_001","/api/admin/notifications/push_001/recipients","/api/admin/settings","/api/admin/database","/api/admin/database/schema"})
+    @ParameterizedTest @ValueSource(strings={"/api/admin/stats","/api/admin/users","/api/admin/users/user_1","/api/admin/events","/api/admin/notifications","/api/admin/notifications/push_001","/api/admin/notifications/push_001/recipients","/api/admin/settings","/api/admin/app-events","/api/admin/database","/api/admin/database/schema"})
     void allAdminReadsEnforceRoles(String path) throws Exception {
         mvc.perform(get(path)).andExpect(status().isUnauthorized());
         mvc.perform(get(path).with(user("member").roles("USER"))).andExpect(status().isForbidden());
@@ -43,6 +44,7 @@ class ApiContractTest {
     @ParameterizedTest @org.junit.jupiter.params.provider.CsvSource({
         "POST,/api/admin/notifications", "POST,/api/admin/notifications/requests",
         "PUT,/api/admin/settings", "POST,/api/admin/database/initialize",
+        "POST,/api/admin/app-events", "PUT,/api/admin/app-events/event_1", "DELETE,/api/admin/app-events/event_1",
         "POST,/api/admin/database/demo", "DELETE,/api/admin/database/demo",
         "POST,/api/mobile/devices", "POST,/api/mobile/settings/register-device",
         "POST,/api/mobile/heartbeat", "POST,/api/mobile/events", "DELETE,/api/mobile/devices/device_test_001"
@@ -114,6 +116,27 @@ class ApiContractTest {
         }
         verify(seeds).apply("admin","test-project",false);
         verify(seeds).apply("admin","test-project",true);
+    }
+    @Test void appEventWritesValidateBodyAndPassActor() throws Exception {
+        String body="""
+          {"titleEn":"National Day","titleAr":"العيد الوطني","messageEn":"Happy National Day","messageAr":"كل عام وأنتم بخير",
+           "startAt":1803502800000,"endAt":1803589200000,"enabled":true,"iconKey":"national_day","accentColor":"#007a3d","bannerUrl":null}
+          """;
+        mvc.perform(post("/api/admin/app-events").with(user("admin").roles("ADMIN")).contentType("application/json").content(body)).andExpect(status().isOk());
+        verify(appEvents).save(isNull(),argThat(o->o.iconKey().equals("national_day") && o.enabled() && o.bannerUrl()==null),eq("admin"));
+        mvc.perform(put("/api/admin/app-events/event_1").with(user("admin").roles("ADMIN")).contentType("application/json").content(body)).andExpect(status().isOk());
+        verify(appEvents).save(eq("event_1"),any(AppEvent.class),eq("admin"));
+        mvc.perform(delete("/api/admin/app-events/event_1").with(user("admin").roles("ADMIN"))).andExpect(status().isOk()).andExpect(jsonPath("$.ok").value(true));
+        verify(appEvents).delete("event_1","admin");
+        for(String invalid:List.of(body.replace("national_day","National Day!"),body.replace("#007a3d","green"),body.replace("\"titleAr\":\"العيد الوطني\"","\"titleAr\":\"\"")))
+            mvc.perform(post("/api/admin/app-events").with(user("admin").roles("ADMIN")).contentType("application/json").content(invalid)).andExpect(status().isBadRequest());
+        verify(appEvents,times(1)).save(isNull(),any(),anyString());
+    }
+    @Test void activeAppEventsArePublicAndPassLanguage() throws Exception {
+        when(appEvents.active("ar-KW")).thenReturn(Map.of("language","ar","serverTime",1L,"events",List.of()));
+        mvc.perform(get("/api/mobile/app-events?language=ar-KW")).andExpect(status().isOk())
+            .andExpect(jsonPath("$.language").value("ar")).andExpect(jsonPath("$.events").isArray());
+        mvc.perform(post("/api/mobile/app-events").contentType("application/json").content("{}")).andExpect(status().isUnauthorized());
     }
     @Test void publicPolicyReturnsActionAndRejectsInvalidPlatform() throws Exception {
         mvc.perform(get("/api/mobile/config?platform=android&build=1&language=ar"))

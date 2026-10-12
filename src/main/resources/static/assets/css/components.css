@@ -497,3 +497,6 @@ textarea:focus {
 .brand-logo { display: inline-block; width: 76px; height: 36px; position: relative; overflow: hidden; flex-shrink: 0; }
 .brand-logo img { position: absolute; width: 100px; max-width: none; height: auto; left: -13px; top: -32px; mix-blend-mode: multiply; }
 @media (max-width: 640px) { .json-panel .row { flex-wrap: wrap; } }
+.color-chip { display: inline-block; width: 14px; height: 14px; margin-right: 6px; border: 1px solid var(--border); border-radius: 3px; vertical-align: -2px; }
+.app-event-preview { margin: 10px 0; border: 1px solid var(--border); }
+input[type="color"].color-input { flex: none; width: 46px; height: 38px; padding: 3px; }

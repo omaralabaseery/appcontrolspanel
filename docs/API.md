@@ -2,7 +2,7 @@
 
 Base URL: `https://YOUR_HOST/api`. Interactive schema: `/swagger-ui.html`; OpenAPI JSON: `/v3/api-docs`.
 
-All API routes except `GET /mobile/config` and `GET /connection` require `Authorization: Bearer <Firebase ID token>`. `/admin/**` additionally requires the boolean `admin=true` claim. A user cannot choose another UID for device registration, heartbeat or event ingestion: ownership comes from the verified token.
+All API routes except `GET /mobile/config`, `GET /mobile/app-events` and `GET /connection` require `Authorization: Bearer <Firebase ID token>`. `/admin/**` additionally requires the boolean `admin=true` claim. A user cannot choose another UID for device registration, heartbeat or event ingestion: ownership comes from the verified token.
 
 ## Admin APIs
 
@@ -19,6 +19,10 @@ All API routes except `GET /mobile/config` and `GET /connection` require `Author
 | POST | `/admin/notifications` | Personalized array of 1–100 IDs or all-users ID 0; requires `Idempotency-Key` |
 | GET | `/admin/notifications/{id}` | Request summary plus first page of recipients / FCM results |
 | GET | `/admin/notifications/{id}/recipients?cursor=` | Remaining recipients, 50 per page |
+| GET | `/admin/app-events` | All app events, ordered by start time (maximum 100) |
+| POST | `/admin/app-events` | Create an app event; writes an audit record |
+| PUT | `/admin/app-events/{id}` | Replace an app event; writes an audit record |
+| DELETE | `/admin/app-events/{id}` | Delete an app event; writes an audit record |
 | GET | `/admin/settings` | Current version and maintenance policy |
 | PUT | `/admin/settings` | Replace complete validated policy; writes an audit record |
 
@@ -163,3 +167,31 @@ Each platform in the settings may now contain:
 ```
 
 The mobile config response adds `versionEnabled` and `allowAccess`. An explicitly disabled build receives `action: version_disabled`, `allowAccess: false`, `updateRequired: true`, the localized update message and store URL. Maintenance has first priority. Enabling a build does not override the minimum supported build; unlisted builds follow the existing minimum/latest policy. Select an enabled latest build before disabling the old latest, to avoid redirecting users to a disabled target. Up to 100 unique rules per platform; omitted release lists remain compatible with old settings. The mobile app must enforce the action once connected in phase two.
+
+## App events (national days and holidays)
+
+These are scheduled events shown to users, stored in `appEvents`. They are separate from the request telemetry under `/admin/events` and `/mobile/events`.
+
+An app event is a time-limited change to how the app looks: an alternate launcher icon, an accent colour, a banner and a localized greeting. Administrators schedule them under **Events**; the app asks which ones are active.
+
+```http
+POST /api/admin/app-events
+Authorization: Bearer <ADMIN_ID_TOKEN>
+Content-Type: application/json
+
+{"titleEn":"Kuwait National Day","titleAr":"العيد الوطني الكويتي","messageEn":"Happy National Day!","messageAr":"كل عام والكويت بخير.","startAt":1803502800000,"endAt":1803589200000,"enabled":true,"iconKey":"national_day","accentColor":"#007a3d","bannerUrl":"https://cdn.example.com/national-day.png"}
+```
+
+`startAt` (inclusive) and `endAt` (exclusive) are epoch milliseconds; `endAt` must be later. Titles are at most 100 characters and greetings 1000; both languages are required. `iconKey` (1–40 of `a-z 0-9 _ -`), `accentColor` (`#RRGGBB`) and `bannerUrl` (https, at most 500 characters) are optional and may be null. `PUT /api/admin/app-events/{id}` takes the same complete body. An unknown ID returns 400. Overlapping events are allowed.
+
+```http
+GET /api/mobile/app-events?language=ar-KW
+```
+
+```json
+{"language":"ar","serverTime":1803510000000,"events":[{"id":"EVENT_ID","title":"العيد الوطني الكويتي","message":"كل عام والكويت بخير.","iconKey":"national_day","accentColor":"#007a3d","bannerUrl":"https://cdn.example.com/national-day.png","startAt":1803502800000,"endAt":1803589200000}]}
+```
+
+This route is public, like `/mobile/config`, so the app can restyle before sign-in. It returns only enabled events whose period contains the server time, ordered by start time, in Arabic for `ar*` locales and English otherwise. An empty array means the app shows its normal appearance. The server caches the list for 60 seconds, so a change can take up to a minute to reach the app. Each server instance keeps its own cache.
+
+Mobile responsibilities: call on launch and resume; use `endAt` and `serverTime` to revert on time without another request; treat an unrecognised `iconKey` as "keep the current icon". Alternate icons must already be bundled in the installed build (iOS alternate icons, Android activity aliases): this API selects one, it cannot deliver a new image. iOS shows a system alert when the icon changes. On a failed request keep the normal appearance.

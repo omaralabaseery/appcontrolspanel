@@ -9,6 +9,7 @@ const escape = (s) =>
       ],
   );
 const icons = {
+  calendar: "M4 5h16v16H4z M4 10h16 M8 3v4 M16 3v4",
   dashboard: "M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z",
   users:
     "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M16 3a4 4 0 0 1 0 8 M22 21v-2a4 4 0 0 0-3-3.9 M9 3a4 4 0 1 0 0 8a4 4 0 1 0 0-8",

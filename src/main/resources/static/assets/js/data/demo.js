@@ -100,6 +100,35 @@ export const initialPolicy = {
     storeUrl: "https://apps.apple.com/app/id123456789",
   },
 };
+// Kuwait time (UTC+3): National Day 25 Feb, Liberation Day 26 Feb.
+export const initialAppEvents = [
+  {
+    id: "demo_event_national_day",
+    titleEn: "Kuwait National Day",
+    titleAr: "العيد الوطني الكويتي",
+    messageEn: "Happy National Day! Wishing Kuwait continued prosperity.",
+    messageAr: "كل عام والكويت بخير بمناسبة العيد الوطني.",
+    startAt: Date.UTC(2027, 1, 24, 21),
+    endAt: Date.UTC(2027, 1, 25, 21),
+    enabled: true,
+    iconKey: "national_day",
+    accentColor: "#007a3d",
+    bannerUrl: null,
+  },
+  {
+    id: "demo_event_liberation_day",
+    titleEn: "Liberation Day",
+    titleAr: "يوم التحرير",
+    messageEn: "Celebrating Kuwait's Liberation Day.",
+    messageAr: "نحتفل معكم بذكرى يوم التحرير.",
+    startAt: Date.UTC(2027, 1, 25, 21),
+    endAt: Date.UTC(2027, 1, 26, 21),
+    enabled: true,
+    iconKey: "liberation_day",
+    accentColor: "#ce1126",
+    bannerUrl: null,
+  },
+];
 export const initialNotifications = [
   {
     id: "demo_notice_1",
