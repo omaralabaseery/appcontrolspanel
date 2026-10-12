@@ -6,17 +6,17 @@ import java.net.URI;
 import java.util.*;
 import static com.appcontrol.panel.dto.Models.*;
 
-/** Seasonal occasions (national days, holidays) the mobile app uses to adjust its icon, greeting and accents. */
+/** Scheduled app events (national days, holidays) the mobile app uses to adjust its icon, greeting and accents. */
 @Service
-public class OccasionService {
-    static final int MAX_OCCASIONS = 100;
+public class AppEventService {
+    static final int MAX_APP_EVENTS = 100;
     private static final long CACHE_MS = 60000;
     private final PanelService panel;
     private List<Map<String,Object>> cached;
     private long expiresAt;
-    OccasionService(PanelService panel) { this.panel=panel; }
+    AppEventService(PanelService panel) { this.panel=panel; }
 
-    static void validate(Occasion o) {
+    static void validate(AppEvent o) {
         if(o.endAt()<=o.startAt()) throw new IllegalArgumentException("End time must be after start time");
         if(o.bannerUrl()==null) return;
         URI uri;
@@ -40,7 +40,7 @@ public class OccasionService {
     private synchronized List<Map<String,Object>> rows() throws Exception {
         long now=System.currentTimeMillis();
         if(cached!=null && now<expiresAt) return cached;
-        var docs=panel.db().collection("occasions").limit(MAX_OCCASIONS).get().get().getDocuments();
+        var docs=panel.db().collection("appEvents").limit(MAX_APP_EVENTS).get().get().getDocuments();
         cached=docs.stream().map(panel::row).sorted(Comparator.comparingLong(r->number(r,"startAt"))).toList();
         expiresAt=now+CACHE_MS;
         return cached;
@@ -54,30 +54,30 @@ public class OccasionService {
     public Map<String,Object> active(String language) throws Exception {
         boolean ar=language.toLowerCase(Locale.ROOT).startsWith("ar"); long now=System.currentTimeMillis();
         var items=rows().stream().filter(r->activeAt(r,now)).map(r->present(r,ar)).toList();
-        return Map.of("language",ar?"ar":"en","serverTime",now,"occasions",items);
+        return Map.of("language",ar?"ar":"en","serverTime",now,"events",items);
     }
-    public Map<String,Object> save(String id,Occasion o,String actor) throws Exception {
+    public Map<String,Object> save(String id,AppEvent o,String actor) throws Exception {
         validate(o);
-        var db=panel.db(); var collection=db.collection("occasions"); long now=System.currentTimeMillis();
+        var db=panel.db(); var collection=db.collection("appEvents"); long now=System.currentTimeMillis();
         var data=panel.map(o); data.put("updatedAt",now);
         var ref=id==null?collection.document():collection.document(PanelService.id(id));
         if(id==null) {
-            if(panel.count(collection)>=MAX_OCCASIONS) throw new IllegalArgumentException("Maximum "+MAX_OCCASIONS+" occasions; delete an old one first");
+            if(panel.count(collection)>=MAX_APP_EVENTS) throw new IllegalArgumentException("Maximum "+MAX_APP_EVENTS+" events; delete an old one first");
             data.put("createdAt",now);
-        } else if(!ref.get().get().exists()) throw new IllegalArgumentException("Occasion not found");
+        } else if(!ref.get().get().exists()) throw new IllegalArgumentException("Event not found");
         var batch=db.batch();
         // Merge keeps createdAt; every optional field is present in data (possibly null), so cleared values are overwritten.
         batch.set(ref,data,SetOptions.merge());
-        batch.set(db.collection("audit").document(),Map.of("action",id==null?"occasion.create":"occasion.update","actor",actor,"createdAt",now,"occasionId",ref.getId(),"occasion",panel.map(o)));
+        batch.set(db.collection("audit").document(),Map.of("action",id==null?"appEvent.create":"appEvent.update","actor",actor,"createdAt",now,"appEventId",ref.getId(),"appEvent",panel.map(o)));
         batch.commit().get(); changed();
         return panel.row(ref.get().get());
     }
     public void delete(String id,String actor) throws Exception {
-        var db=panel.db(); var ref=db.collection("occasions").document(PanelService.id(id));
-        if(!ref.get().get().exists()) throw new IllegalArgumentException("Occasion not found");
+        var db=panel.db(); var ref=db.collection("appEvents").document(PanelService.id(id));
+        if(!ref.get().get().exists()) throw new IllegalArgumentException("Event not found");
         var batch=db.batch();
         batch.delete(ref);
-        batch.set(db.collection("audit").document(),Map.of("action","occasion.delete","actor",actor,"createdAt",System.currentTimeMillis(),"occasionId",id));
+        batch.set(db.collection("audit").document(),Map.of("action","appEvent.delete","actor",actor,"createdAt",System.currentTimeMillis(),"appEventId",id));
         batch.commit().get(); changed();
     }
 }

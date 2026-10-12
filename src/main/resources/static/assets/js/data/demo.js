@@ -101,9 +101,9 @@ export const initialPolicy = {
   },
 };
 // Kuwait time (UTC+3): National Day 25 Feb, Liberation Day 26 Feb.
-export const initialOccasions = [
+export const initialAppEvents = [
   {
-    id: "demo_occasion_national_day",
+    id: "demo_event_national_day",
     titleEn: "Kuwait National Day",
     titleAr: "العيد الوطني الكويتي",
     messageEn: "Happy National Day! Wishing Kuwait continued prosperity.",
@@ -116,7 +116,7 @@ export const initialOccasions = [
     bannerUrl: null,
   },
   {
-    id: "demo_occasion_liberation_day",
+    id: "demo_event_liberation_day",
     titleEn: "Liberation Day",
     titleAr: "يوم التحرير",
     messageEn: "Celebrating Kuwait's Liberation Day.",

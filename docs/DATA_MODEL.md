@@ -9,7 +9,7 @@ All server timestamps are epoch milliseconds. Firebase stores a single applicati
 | events | SHA-256(uid:eventId) | uid, eventId, feature, method, path, status, durationMs, message, createdAt |
 | notifications | SHA-256(actor:idempotencyKey) | actor, userIds, title, body, fingerprint, status, accepted, failed, createdAt |
 | settings | application | maintenance, localized messages, Android/iOS policy |
-| occasions | auto ID | titleEn/Ar, messageEn/Ar, startAt, endAt, enabled, iconKey, accentColor, bannerUrl, createdAt, updatedAt |
+| appEvents | auto ID | titleEn/Ar, messageEn/Ar, startAt, endAt, enabled, iconKey, accentColor, bannerUrl, createdAt, updatedAt |
 | audit | auto ID | actor, action, createdAt, policy snapshot or createdDocuments |
 | _meta | schema | schemaVersion, collectionNames, createdAt, createdBy |
 

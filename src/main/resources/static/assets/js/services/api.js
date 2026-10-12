@@ -4,7 +4,7 @@ import {
   events,
   initialPolicy,
   initialNotifications,
-  initialOccasions,
+  initialAppEvents,
 } from "../data/demo.js";
 export let live = false;
 let firebaseAuth, authSdk;
@@ -19,9 +19,9 @@ function loadDemo() {
 const saved = loadDemo();
 let policy = saved.policy || structuredClone(initialPolicy),
   notifications = saved.notifications || structuredClone(initialNotifications),
-  occasions = saved.occasions || structuredClone(initialOccasions);
+  appEvents = saved.appEvents || structuredClone(initialAppEvents);
 function persist() {
-  localStorage.setItem(storageKey, JSON.stringify({ policy, notifications, occasions }));
+  localStorage.setItem(storageKey, JSON.stringify({ policy, notifications, appEvents }));
 }
 const clone = (x) => structuredClone(x);
 export async function signIn(email, password) {
@@ -146,17 +146,17 @@ function demo(path, options) {
     if(!item) throw Error("Push request not found");
     return Promise.resolve(clone(p.endsWith('/recipients')?item.recipients || {items:[],nextCursor:""}:item));
   }
-  if (p === "/admin/occasions" || p.startsWith("/admin/occasions/")) {
+  if (p === "/admin/app-events" || p.startsWith("/admin/app-events/")) {
     const id = decodeURIComponent(p.split("/")[3] || "");
-    if (options.method === "POST") occasions.push({ ...clone(options.body), id: crypto.randomUUID(), createdAt: Date.now() });
+    if (options.method === "POST") appEvents.push({ ...clone(options.body), id: crypto.randomUUID(), createdAt: Date.now() });
     else if (options.method) {
-      const index = occasions.findIndex((o) => o.id === id);
-      if (index < 0) throw Error("Occasion not found");
-      if (options.method === "DELETE") occasions.splice(index, 1);
-      else occasions[index] = { ...occasions[index], ...clone(options.body) };
+      const index = appEvents.findIndex((o) => o.id === id);
+      if (index < 0) throw Error("Event not found");
+      if (options.method === "DELETE") appEvents.splice(index, 1);
+      else appEvents[index] = { ...appEvents[index], ...clone(options.body) };
     }
     if (options.method) persist();
-    return Promise.resolve({ items: clone(occasions).sort((a, b) => a.startAt - b.startAt), nextCursor: "" });
+    return Promise.resolve({ items: clone(appEvents).sort((a, b) => a.startAt - b.startAt), nextCursor: "" });
   }
   throw Error("Demo endpoint not available");
 }

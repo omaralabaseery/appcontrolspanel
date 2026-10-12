@@ -33,7 +33,7 @@ public final class Models {
         @JsonAlias({"Output.json","output.json"}) JsonNode output) {}
     public record PushItem(@NotBlank @Size(max=128) String id,
         @NotBlank @Size(max=100) String title, @NotBlank @Size(max=1000) String message) {}
-    public record Occasion(@NotBlank @Size(max=100) String titleEn, @NotBlank @Size(max=100) String titleAr,
+    public record AppEvent(@NotBlank @Size(max=100) String titleEn, @NotBlank @Size(max=100) String titleAr,
         @NotBlank @Size(max=1000) String messageEn, @NotBlank @Size(max=1000) String messageAr,
         @Min(1) long startAt, @Min(1) long endAt, boolean enabled,
         @Pattern(regexp="[a-z0-9_-]{1,40}") String iconKey, @Pattern(regexp="#[0-9A-Fa-f]{6}") String accentColor,

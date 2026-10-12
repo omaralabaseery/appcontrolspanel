@@ -23,7 +23,7 @@ const titles = {
   logs: "Requests & logs",
   versions: "Version control",
   maintenance: "Maintenance",
-  occasions: "Occasions",
+  events: "Events",
   integration: "Integration",
 };
 const subtitles = {
@@ -33,7 +33,7 @@ const subtitles = {
   logs: "Trace application requests and investigate reported problems.",
   versions: "Manage supported builds and guide users to the latest release.",
   maintenance: "Control application availability with localized messages.",
-  occasions: "Schedule national days and holidays that restyle the app for a limited time.",
+  events: "Schedule national days and holidays that restyle the app for a limited time.",
   integration: "Connect Firebase and integrate your mobile application.",
 };
 let page = "overview",
@@ -42,7 +42,7 @@ let page = "overview",
   events = [],
   policy,
   notifications = [],
-  occasions = [],
+  appEvents = [],
   userCursor = "",
   eventCursor = "",
   noticeCursor = "";
@@ -110,11 +110,11 @@ async function render() {
       policy = await api("/admin/settings");
       if (run !== generation) return;
       html = page === "versions" ? versionsPage() : maintenancePage();
-    } else if (page === "occasions") {
-      const data = await api("/admin/occasions");
+    } else if (page === "events") {
+      const data = await api("/admin/app-events");
       if (run !== generation) return;
-      occasions = data.items;
-      html = occasionsPage();
+      appEvents = data.items;
+      html = appEventsPage();
     } else html = integrationPage();
     if (run !== generation) return;
     $("#main").innerHTML = html;
@@ -376,62 +376,62 @@ function maintenancePreview() {
   $("#maintenance-preview").innerHTML =
     `<span class="stat-icon" style="margin:auto">${icon(enabled ? "tool" : "check")}</span><h3>${enabled ? (ar ? "صيانة التطبيق" : "We’ll be back soon") : ar ? "التطبيق متاح" : "Application available"}</h3><p>${enabled ? escape($("#maintenance-" + (ar ? "ar" : "en")).value) : ar ? "يمكنك استخدام التطبيق الآن." : "Your users can continue using the app."}</p><span class="badge ${enabled ? "amber" : "green"}">${enabled ? (ar ? "الصيانة مفعّلة" : "Maintenance enabled") : ar ? "الصيانة غير مفعّلة" : "Maintenance disabled"}</span>`;
 }
-function occasionState(o, now = Date.now()) {
+function appEventState(o, now = Date.now()) {
   return !o.enabled ? ["Disabled", ""] : now < o.startAt ? ["Scheduled", "blue"] : now < o.endAt ? ["Active now", "green"] : ["Ended", "amber"];
 }
-function occasionsPage() {
-  const rows = occasions.map((o) => {
-    const [state, color] = occasionState(o);
-    return `<tr><td><strong>${escape(o.titleEn)}</strong><small dir="rtl" lang="ar">${escape(o.titleAr)}</small></td><td>${badge(state, color)}</td><td>${date(o.startAt)}<small>to ${date(o.endAt)}</small></td><td>${o.iconKey ? `<code>${escape(o.iconKey)}</code>` : '<span class="muted">Default icon</span>'}</td><td>${o.accentColor ? `<span class="color-chip" style="background:${escape(o.accentColor)}"></span>${escape(o.accentColor)}` : '<span class="muted">Default</span>'}</td><td><button class="link-button" data-occasion="${escape(o.id)}">Edit</button></td></tr>`;
+function appEventsPage() {
+  const rows = appEvents.map((o) => {
+    const [state, color] = appEventState(o);
+    return `<tr><td><strong>${escape(o.titleEn)}</strong><small dir="rtl" lang="ar">${escape(o.titleAr)}</small></td><td>${badge(state, color)}</td><td>${date(o.startAt)}<small>to ${date(o.endAt)}</small></td><td>${o.iconKey ? `<code>${escape(o.iconKey)}</code>` : '<span class="muted">Default icon</span>'}</td><td>${o.accentColor ? `<span class="color-chip" style="background:${escape(o.accentColor)}"></span>${escape(o.accentColor)}` : '<span class="muted">Default</span>'}</td><td><button class="link-button" data-app-event="${escape(o.id)}">Edit</button></td></tr>`;
   });
   return (
-    head(`<button class="button primary btn btn-primary" id="new-occasion">${icon("calendar")} New occasion</button>`) +
-    `<div class="notice">${icon("clock")}<span>The app reads active occasions on launch and resume, then applies the icon key, accent colour, banner and greeting it recognises. Times are shown in this browser's time zone.</span></div><section class="panel card"><div class="panel-head card-header"><div><h2>Scheduled occasions</h2><small>${occasions.length} of 100</small></div></div><div class="table-wrap"><table><thead><tr><th>Occasion</th><th>Status</th><th>Period</th><th>App icon key</th><th>Accent</th><th></th></tr></thead><tbody>${rows.join("") || '<tr><td colspan="6" class="empty">No occasions yet.</td></tr>'}</tbody></table></div></section>`
+    head(`<button class="button primary btn btn-primary" id="new-app-event">${icon("calendar")} New event</button>`) +
+    `<div class="notice">${icon("clock")}<span>The app reads active events on launch and resume, then applies the icon key, accent colour, banner and greeting it recognises. Times are shown in this browser's time zone.</span></div><section class="panel card"><div class="panel-head card-header"><div><h2>Scheduled events</h2><small>${appEvents.length} of 100</small></div></div><div class="table-wrap"><table><thead><tr><th>Event</th><th>Status</th><th>Period</th><th>App icon key</th><th>Accent</th><th></th></tr></thead><tbody>${rows.join("") || '<tr><td colspan="6" class="empty">No events yet.</td></tr>'}</tbody></table></div></section>`
   );
 }
 // <input type="datetime-local"> works in local time without a zone suffix.
 const localInput = (ms) => new Date(ms - new Date(ms).getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-function occasionDialog(existing) {
+function appEventDialog(existing) {
   const day = new Date().setHours(0, 0, 0, 0);
   const o = existing || { titleEn: "", titleAr: "", messageEn: "", messageAr: "", startAt: day + 86400000, endAt: day + 2 * 86400000, enabled: true, iconKey: "", accentColor: "", bannerUrl: "" };
   dialog(
-    existing ? "Edit occasion" : "New occasion",
-    `<form id="occasion-form"><div class="fields"><div class="field"><label for="occasion-title-en">English title</label><input id="occasion-title-en" required maxlength="100" value="${escape(o.titleEn)}"></div><div class="field"><label for="occasion-title-ar">Arabic title</label><input id="occasion-title-ar" dir="rtl" lang="ar" required maxlength="100" value="${escape(o.titleAr)}"></div></div><div class="fields"><div class="field"><label for="occasion-message-en">English greeting</label><textarea id="occasion-message-en" required maxlength="1000">${escape(o.messageEn)}</textarea></div><div class="field"><label for="occasion-message-ar">Arabic greeting</label><textarea id="occasion-message-ar" dir="rtl" lang="ar" required maxlength="1000">${escape(o.messageAr)}</textarea></div></div><div class="fields"><div class="field"><label for="occasion-start">Starts</label><input id="occasion-start" type="datetime-local" required value="${localInput(o.startAt)}"></div><div class="field"><label for="occasion-end">Ends</label><input id="occasion-end" type="datetime-local" required value="${localInput(o.endAt)}"></div></div><div class="fields"><div class="field"><label for="occasion-icon">App icon key</label><input id="occasion-icon" pattern="[a-z0-9_\\-]{1,40}" placeholder="national_day" value="${escape(o.iconKey || "")}"><small>Name of an alternate icon bundled in the app. Empty keeps the default icon.</small></div><div class="field"><label for="occasion-color-text">Accent colour</label><div class="row"><input id="occasion-color" class="color-input" type="color" aria-label="Pick accent colour" value="${escape(o.accentColor || "#cd0b0c")}"><input id="occasion-color-text" pattern="#[0-9A-Fa-f]{6}" placeholder="#007a3d" value="${escape(o.accentColor || "")}"></div><small>Empty keeps the app's normal colours.</small></div></div><div class="field"><label for="occasion-banner">Banner image URL</label><input id="occasion-banner" type="url" maxlength="500" placeholder="https://…" value="${escape(o.bannerUrl || "")}"></div><div class="switch-row"><div><h3 style="margin:0">Enabled</h3><p>Disabled occasions are never sent to the app.</p></div><input type="checkbox" class="switch" id="occasion-enabled" aria-label="Enable occasion" ${o.enabled ? "checked" : ""}></div><div class="row spaced" style="margin-top:14px"><h3 style="margin:0">Mobile preview</h3><select id="occasion-preview-language" aria-label="Preview language"><option value="en">English</option><option value="ar">العربية</option></select></div><div class="phone-modal occasion-preview" id="occasion-preview"></div><div class="form-actions">${existing ? '<button type="button" class="button btn btn-outline-secondary" id="delete-occasion">Delete</button>' : ""}<button class="button primary btn btn-primary" type="submit">${existing ? "Save occasion" : "Create occasion"}</button></div></form>`,
+    existing ? "Edit event" : "New event",
+    `<form id="app-event-form"><div class="fields"><div class="field"><label for="app-event-title-en">English title</label><input id="app-event-title-en" required maxlength="100" value="${escape(o.titleEn)}"></div><div class="field"><label for="app-event-title-ar">Arabic title</label><input id="app-event-title-ar" dir="rtl" lang="ar" required maxlength="100" value="${escape(o.titleAr)}"></div></div><div class="fields"><div class="field"><label for="app-event-message-en">English greeting</label><textarea id="app-event-message-en" required maxlength="1000">${escape(o.messageEn)}</textarea></div><div class="field"><label for="app-event-message-ar">Arabic greeting</label><textarea id="app-event-message-ar" dir="rtl" lang="ar" required maxlength="1000">${escape(o.messageAr)}</textarea></div></div><div class="fields"><div class="field"><label for="app-event-start">Starts</label><input id="app-event-start" type="datetime-local" required value="${localInput(o.startAt)}"></div><div class="field"><label for="app-event-end">Ends</label><input id="app-event-end" type="datetime-local" required value="${localInput(o.endAt)}"></div></div><div class="fields"><div class="field"><label for="app-event-icon">App icon key</label><input id="app-event-icon" pattern="[a-z0-9_\\-]{1,40}" placeholder="national_day" value="${escape(o.iconKey || "")}"><small>Name of an alternate icon bundled in the app. Empty keeps the default icon.</small></div><div class="field"><label for="app-event-color-text">Accent colour</label><div class="row"><input id="app-event-color" class="color-input" type="color" aria-label="Pick accent colour" value="${escape(o.accentColor || "#cd0b0c")}"><input id="app-event-color-text" pattern="#[0-9A-Fa-f]{6}" placeholder="#007a3d" value="${escape(o.accentColor || "")}"></div><small>Empty keeps the app's normal colours.</small></div></div><div class="field"><label for="app-event-banner">Banner image URL</label><input id="app-event-banner" type="url" maxlength="500" placeholder="https://…" value="${escape(o.bannerUrl || "")}"></div><div class="switch-row"><div><h3 style="margin:0">Enabled</h3><p>Disabled events are never sent to the app.</p></div><input type="checkbox" class="switch" id="app-event-enabled" aria-label="Enable event" ${o.enabled ? "checked" : ""}></div><div class="row spaced" style="margin-top:14px"><h3 style="margin:0">Mobile preview</h3><select id="app-event-preview-language" aria-label="Preview language"><option value="en">English</option><option value="ar">العربية</option></select></div><div class="phone-modal app-event-preview" id="app-event-preview"></div><div class="form-actions">${existing ? '<button type="button" class="button btn btn-outline-secondary" id="delete-app-event">Delete</button>' : ""}<button class="button primary btn btn-primary" type="submit">${existing ? "Save event" : "Create event"}</button></div></form>`,
   );
   const preview = () => {
-    const ar = $("#occasion-preview-language").value === "ar", color = $("#occasion-color-text").value.trim();
-    $("#occasion-preview").dir = ar ? "rtl" : "ltr";
-    $("#occasion-preview").style.borderTop = /^#[0-9a-f]{6}$/i.test(color) ? `4px solid ${color}` : "";
-    $("#occasion-preview").innerHTML = `<h3>${escape($("#occasion-title-" + (ar ? "ar" : "en")).value || (ar ? "عنوان المناسبة" : "Occasion title"))}</h3><p>${escape($("#occasion-message-" + (ar ? "ar" : "en")).value || (ar ? "ستظهر التهنئة هنا." : "Your greeting will appear here."))}</p>`;
+    const ar = $("#app-event-preview-language").value === "ar", color = $("#app-event-color-text").value.trim();
+    $("#app-event-preview").dir = ar ? "rtl" : "ltr";
+    $("#app-event-preview").style.borderTop = /^#[0-9a-f]{6}$/i.test(color) ? `4px solid ${color}` : "";
+    $("#app-event-preview").innerHTML = `<h3>${escape($("#app-event-title-" + (ar ? "ar" : "en")).value || (ar ? "عنوان الحدث" : "Event title"))}</h3><p>${escape($("#app-event-message-" + (ar ? "ar" : "en")).value || (ar ? "ستظهر التهنئة هنا." : "Your greeting will appear here."))}</p>`;
   };
-  $("#occasion-color").oninput = () => { $("#occasion-color-text").value = $("#occasion-color").value; };
-  $("#occasion-form").oninput = preview;
+  $("#app-event-color").oninput = () => { $("#app-event-color-text").value = $("#app-event-color").value; };
+  $("#app-event-form").oninput = preview;
   preview();
-  $("#occasion-form").onsubmit = (e) => {
+  $("#app-event-form").onsubmit = (e) => {
     e.preventDefault();
     const body = {
-      titleEn: $("#occasion-title-en").value.trim(), titleAr: $("#occasion-title-ar").value.trim(),
-      messageEn: $("#occasion-message-en").value.trim(), messageAr: $("#occasion-message-ar").value.trim(),
-      startAt: new Date($("#occasion-start").value).getTime(), endAt: new Date($("#occasion-end").value).getTime(),
-      enabled: $("#occasion-enabled").checked,
-      iconKey: $("#occasion-icon").value.trim() || null, accentColor: $("#occasion-color-text").value.trim() || null,
-      bannerUrl: $("#occasion-banner").value.trim() || null,
+      titleEn: $("#app-event-title-en").value.trim(), titleAr: $("#app-event-title-ar").value.trim(),
+      messageEn: $("#app-event-message-en").value.trim(), messageAr: $("#app-event-message-ar").value.trim(),
+      startAt: new Date($("#app-event-start").value).getTime(), endAt: new Date($("#app-event-end").value).getTime(),
+      enabled: $("#app-event-enabled").checked,
+      iconKey: $("#app-event-icon").value.trim() || null, accentColor: $("#app-event-color-text").value.trim() || null,
+      bannerUrl: $("#app-event-banner").value.trim() || null,
     };
     if (!(body.endAt > body.startAt)) return toast("End time must be after start time.");
     if (body.bannerUrl && !body.bannerUrl.startsWith("https://")) return toast("Banner URL must start with https://");
     busy($("button[type=submit]", e.target), async () => {
-      await api("/admin/occasions" + (existing ? "/" + encodeURIComponent(existing.id) : ""), { method: existing ? "PUT" : "POST", body });
+      await api("/admin/app-events" + (existing ? "/" + encodeURIComponent(existing.id) : ""), { method: existing ? "PUT" : "POST", body });
       $("#dialog").close();
-      toast(live ? "Occasion saved." : "Demo occasion saved.");
+      toast(live ? "Event saved." : "Demo event saved.");
       render();
     });
   };
-  if (existing) $("#delete-occasion").onclick = (e) => {
+  if (existing) $("#delete-app-event").onclick = (e) => {
     if (e.target.dataset.armed !== "true") { e.target.dataset.armed = "true"; e.target.textContent = "Click again to delete"; return; }
     busy(e.target, async () => {
-      await api("/admin/occasions/" + encodeURIComponent(existing.id), { method: "DELETE" });
+      await api("/admin/app-events/" + encodeURIComponent(existing.id), { method: "DELETE" });
       $("#dialog").close();
-      toast("Occasion deleted.");
+      toast("Event deleted.");
       render();
     });
   };
@@ -443,7 +443,7 @@ function databasePanel() {
     ["events", "User requests, features and diagnostic logs"],
     ["notifications", "Push requests [{id, title, message}]: id 0 = all users; user IDs = selected users. Includes recipients and FCM results."],
     ["settings / application", "Localized maintenance and version policy. Settings API also provides register-device; device records are stored in installations."],
-    ["occasions", "National days and holidays: localized greeting, period, app icon key, accent colour and banner"],
+    ["appEvents", "Scheduled app events (national days and holidays): localized greeting, period, app icon key, accent colour and banner"],
     ["audit", "Administrator configuration changes"],
     ["_meta / schema", "Database schema version and initialization metadata"],
   ];
@@ -496,8 +496,8 @@ function integrationPage() {
     ],
     [
       "GET",
-      "/mobile/occasions?language=ar",
-      "Occasions active right now: localized title and greeting, icon key, accent colour and banner. Public.",
+      "/mobile/app-events?language=ar",
+      "App events active right now: localized title and greeting, icon key, accent colour and banner. Public.",
     ],
     [
       "POST",
@@ -748,9 +748,9 @@ function bind() {
         });
     };
   }
-  if (page === "occasions") {
-    $("#new-occasion").onclick = () => occasionDialog();
-    $$("[data-occasion]").forEach((b) => (b.onclick = () => occasionDialog(occasions.find((o) => o.id === b.dataset.occasion))));
+  if (page === "events") {
+    $("#new-app-event").onclick = () => appEventDialog();
+    $$("[data-app-event]").forEach((b) => (b.onclick = () => appEventDialog(appEvents.find((o) => o.id === b.dataset.appEvent))));
   }
   if ($("#integration-connect")) $("#integration-connect").onclick = connection;
   if ($("#database-refresh")) {

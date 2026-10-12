@@ -103,9 +103,9 @@
       }
     },
     {
-      "name": "occasions",
+      "name": "appEvents",
       "documentId": "Firestore-generated ID",
-      "createdBy": "POST /api/admin/occasions",
+      "createdBy": "POST /api/admin/app-events",
       "fields": {
         "titleEn": "string; required, <= 100",
         "titleAr": "string; required, <= 100",
@@ -124,9 +124,9 @@
     {
       "name": "audit",
       "documentId": "Firestore-generated ID",
-      "createdBy": "database initialization, policy update or occasion change",
+      "createdBy": "database initialization, policy update or app event change",
       "fields": {
-        "action": "database.initialize | policy.update | occasion.create | occasion.update | occasion.delete",
+        "action": "database.initialize | policy.update | appEvent.create | appEvent.update | appEvent.delete",
         "actor": "string; admin UID",
         "createdAt": "integer; server epoch ms",
         "policy": "map; policy snapshot, only for policy.update",
