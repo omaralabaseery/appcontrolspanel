@@ -103,11 +103,30 @@
       }
     },
     {
+      "name": "occasions",
+      "documentId": "Firestore-generated ID",
+      "createdBy": "POST /api/admin/occasions",
+      "fields": {
+        "titleEn": "string; required, <= 100",
+        "titleAr": "string; required, <= 100",
+        "messageEn": "string; required, <= 1000",
+        "messageAr": "string; required, <= 1000",
+        "startAt": "integer; epoch ms, inclusive",
+        "endAt": "integer; epoch ms, exclusive, > startAt",
+        "enabled": "boolean",
+        "iconKey": "string | null; alternate app icon name, 1–40 of a-z 0-9 _ -",
+        "accentColor": "string | null; #RRGGBB",
+        "bannerUrl": "string | null; https URL <= 500",
+        "createdAt": "integer; server epoch ms",
+        "updatedAt": "integer; server epoch ms"
+      }
+    },
+    {
       "name": "audit",
       "documentId": "Firestore-generated ID",
-      "createdBy": "database initialization or policy update",
+      "createdBy": "database initialization, policy update or occasion change",
       "fields": {
-        "action": "database.initialize | policy.update",
+        "action": "database.initialize | policy.update | occasion.create | occasion.update | occasion.delete",
         "actor": "string; admin UID",
         "createdAt": "integer; server epoch ms",
         "policy": "map; policy snapshot, only for policy.update",

@@ -1,5 +1,6 @@
 package com.appcontrol.panel.controller;
 import jakarta.validation.Valid;
+import com.appcontrol.panel.service.OccasionService;
 import com.appcontrol.panel.service.PanelService;
 import com.appcontrol.panel.service.PolicyService;
 import com.appcontrol.panel.service.PushRequestService;
@@ -15,7 +16,8 @@ import static com.appcontrol.panel.dto.Models.*;
 class PanelController {
     private final PanelService service;
     private final PushRequestService pushes;
-    PanelController(PanelService service,PushRequestService pushes) { this.service=service;this.pushes=pushes; }
+    private final OccasionService occasions;
+    PanelController(PanelService service,PushRequestService pushes,OccasionService occasions) { this.service=service;this.pushes=pushes;this.occasions=occasions; }
     @GetMapping("/admin/stats") Object stats() throws Exception { return service.stats(); }
     @GetMapping("/admin/users") Object users(@RequestParam(defaultValue="") String cursor) throws Exception { return service.page("users",cursor,null); }
     @GetMapping("/admin/users/{uid}") Object user(@PathVariable String uid) throws Exception { return service.user(uid); }
@@ -26,6 +28,11 @@ class PanelController {
     @GetMapping("/admin/notifications/{id}/recipients") Object pushRecipients(@PathVariable String id,@RequestParam(defaultValue="") String cursor) throws Exception {return pushes.recipients(id,cursor);}
     @GetMapping("/admin/settings") Object settings() throws Exception { return service.policy(); }
     @PutMapping("/admin/settings") Object settings(@Valid @RequestBody Policy policy,Principal p) throws Exception { return service.savePolicy(policy,p.getName()); }
+    @GetMapping("/admin/occasions") Object occasions() throws Exception { return occasions.list(); }
+    @PostMapping("/admin/occasions") Object createOccasion(@Valid @RequestBody Occasion o,Principal p) throws Exception { return occasions.save(null,o,p.getName()); }
+    @PutMapping("/admin/occasions/{id}") Object updateOccasion(@PathVariable String id,@Valid @RequestBody Occasion o,Principal p) throws Exception { return occasions.save(id,o,p.getName()); }
+    @DeleteMapping("/admin/occasions/{id}") Object deleteOccasion(@PathVariable String id,Principal p) throws Exception { occasions.delete(id,p.getName()); return Map.of("ok",true); }
+    @GetMapping("/mobile/occasions") Object activeOccasions(@RequestParam(defaultValue="en") String language) throws Exception { return occasions.active(language); }
     @GetMapping("/mobile/config") Object config(@RequestParam String platform,@RequestParam long build,@RequestParam(defaultValue="en") String language) throws Exception {
         return PolicyService.evaluate(service.policy(),platform,build,language);
     }

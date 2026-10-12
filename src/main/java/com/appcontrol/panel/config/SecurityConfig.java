@@ -20,7 +20,7 @@ class SecurityConfig {
     @Bean SecurityFilterChain security(HttpSecurity http, ObjectProvider<FirebaseAuth> auth) throws Exception {
         return http.csrf(c -> c.disable()).sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(a -> a.requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET,"/api/mobile/config","/api/connection").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/mobile/config","/api/mobile/occasions","/api/connection").permitAll()
                 .requestMatchers("/api/mobile/**").authenticated().requestMatchers("/api/**").denyAll()
                 .anyRequest().permitAll())
             .exceptionHandling(e -> e.authenticationEntryPoint((q,r,x) -> json(r,401,"Authentication required"))

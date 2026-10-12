@@ -55,6 +55,30 @@
               }
             }
           ]
+        },
+        {
+          "name": "Active occasions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/mobile/occasions?language=ar",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"JSON response\", () => pm.response.to.be.json);",
+                  "pm.test(\"Occasion list\",()=>pm.expect(pm.response.json().occasions).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -366,6 +390,37 @@
                   "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
                   "pm.test(\"JSON response\", () => pm.response.to.be.json);",
                   ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Occasions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/admin/occasions",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"JSON response\", () => pm.response.to.be.json);",
+                  "pm.test(\"Occasion page\",()=>pm.expect(pm.response.json().items).to.be.an(\"array\"));"
                 ]
               }
             }

@@ -4,6 +4,7 @@ import {
   events,
   initialPolicy,
   initialNotifications,
+  initialOccasions,
 } from "../data/demo.js";
 export let live = false;
 let firebaseAuth, authSdk;
@@ -17,9 +18,10 @@ function loadDemo() {
 }
 const saved = loadDemo();
 let policy = saved.policy || structuredClone(initialPolicy),
-  notifications = saved.notifications || structuredClone(initialNotifications);
+  notifications = saved.notifications || structuredClone(initialNotifications),
+  occasions = saved.occasions || structuredClone(initialOccasions);
 function persist() {
-  localStorage.setItem(storageKey, JSON.stringify({ policy, notifications }));
+  localStorage.setItem(storageKey, JSON.stringify({ policy, notifications, occasions }));
 }
 const clone = (x) => structuredClone(x);
 export async function signIn(email, password) {
@@ -143,6 +145,18 @@ function demo(path, options) {
     const item=notifications.find(n=>n.id===id);
     if(!item) throw Error("Push request not found");
     return Promise.resolve(clone(p.endsWith('/recipients')?item.recipients || {items:[],nextCursor:""}:item));
+  }
+  if (p === "/admin/occasions" || p.startsWith("/admin/occasions/")) {
+    const id = decodeURIComponent(p.split("/")[3] || "");
+    if (options.method === "POST") occasions.push({ ...clone(options.body), id: crypto.randomUUID(), createdAt: Date.now() });
+    else if (options.method) {
+      const index = occasions.findIndex((o) => o.id === id);
+      if (index < 0) throw Error("Occasion not found");
+      if (options.method === "DELETE") occasions.splice(index, 1);
+      else occasions[index] = { ...occasions[index], ...clone(options.body) };
+    }
+    if (options.method) persist();
+    return Promise.resolve({ items: clone(occasions).sort((a, b) => a.startAt - b.startAt), nextCursor: "" });
   }
   throw Error("Demo endpoint not available");
 }
